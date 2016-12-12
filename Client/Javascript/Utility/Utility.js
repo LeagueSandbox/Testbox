@@ -19,7 +19,11 @@ function CreateElement(options) {
             element.type = options['inputType'];
             if (options.hasOwnProperty('text')) element.text = options['text'];
         } else {
-            if (options.hasOwnProperty('text')) element.innerText = options['text'];
+            if (options['type'] == 'input') {
+                if (options.hasOwnProperty('text')) element.value = options['text'];
+            } else {
+                if (options.hasOwnProperty('text')) element.innerText = options['text'];
+            }
         }
         if (options.hasOwnProperty('html')) element.innerHTML = options['html'];
         if (options.hasOwnProperty('opacity')) element.style.opacity = options['opacity'];

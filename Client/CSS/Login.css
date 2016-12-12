@@ -1,0 +1,40 @@
+.Login_MainDiv {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 20px);
+    top: 0px;
+    left: 0px;
+    color: white;
+    padding-top: 20px;
+}
+.Login_Label {
+    float: left;
+    clear: left;
+    margin: 5px;
+    transform: rotate(1deg);
+}
+.Login_PathInput {
+    float: left;
+    clear: right;
+    transform: rotate(1deg);
+}
+.Login_NameInput {
+    float: left;
+    clear: right;
+    transform: rotate(1deg);
+}
+.Login_HostInput {
+    float: left;
+    clear: right;
+    transform: rotate(1deg);
+}
+.Login_PortInput {
+    float: left;
+    clear: right;
+    transform: rotate(1deg);
+}
+.Login_Button {
+    float: left;
+    clear: right;
+    transform: rotate(1deg);
+}

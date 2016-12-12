@@ -23,4 +23,12 @@
     line-height: 50px;
     border-bottom: 1px solid darkgrey;
     font-size: 30px;
+    font-family: "Comic Sans MS";
+}
+.AppLogic_ViewDiv {
+    height: calc(100% - 50px);
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    top: 50px;
 }

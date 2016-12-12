@@ -1,15 +1,18 @@
+var Player = require('./Player');
+
 var onlinePlayers = [];
 var currentPlayerID = 0;
 
 var WebSocketServer = require('ws').Server
-, wss = new WebSocketServer({ port: 8080 });
+, wss = new WebSocketServer({ port: 7777 });
 
-console.log("Started server on port 8080");
+console.log("Started server on port 7777");
 
 wss.on('connection', function connection(ws) {
 	var player = new Player(ws);
 	player.id = currentPlayerID;
 	currentPlayerID++;
+    onlinePlayers.push(player);
 	console.log("Player connected "+ currentPlayerID);
 	console.log("Players online: " + onlinePlayers.length);
 
