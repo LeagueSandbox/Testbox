@@ -31,6 +31,7 @@ AppLogic.prototype.connectedToServer = function() {
     this.loginPage.getDiv().remove();
     this.showMainPage();
     this.mainPage.addToChat("Connected to server as " + this.appData.nickname);
+    this.mainPage.addToChat("Please use official Discord chat to discuss development");
     this.networkManager.sendNickname();
 };
 

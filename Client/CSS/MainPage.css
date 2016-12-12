@@ -14,6 +14,11 @@
     border: 1px solid gray;
     color: white;
     box-sizing: border-box;
+    white-space: pre-wrap;
+    overflow-y: scroll;
+    word-break: break-all;
+    overflow-x: hidden;
+    word-wrap: break-word;
 }
 .MainPage_ChatBoxInput {
     position: absolute;

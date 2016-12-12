@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "UI Server for League Sandbox",
-  "main": "server.js",
+  "main": "ServerLogic.js",
   "dependencies": {
     "ws": "^1.1.1"
   },

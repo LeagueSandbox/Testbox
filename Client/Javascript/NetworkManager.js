@@ -29,7 +29,7 @@ NetworkManager.prototype.connectToServer = function() {
         var messageTitle = message['message'];
         switch (messageTitle) {
             case "Chat": {
-                this.appLogic.mainPage.addToChat(message['Text']);
+                this.appLogic.mainPage.addToChat(message['text']);
             }break;
         }
     });
@@ -37,6 +37,7 @@ NetworkManager.prototype.connectToServer = function() {
     this.ws.onclose = CreateFunction(this, function()
     {
         // websocket is closed.
+        this.appLogic.mainPage.getDiv().remove();
         this.appLogic.showLoginPage();
     });
 };
