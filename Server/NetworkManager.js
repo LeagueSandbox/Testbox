@@ -20,6 +20,7 @@ function NetworkManager(serverLogic) {
         player.id = this.currentPlayerID;
         this.currentPlayerID++;
         this.sendToPlayer(player, this.getOnlineList());
+        this.sendToPlayer(player, this.getLobbyListMessage());
         this.onlinePlayers.push(player);
         console.log("Player connected "+ this.currentPlayerID);
         console.log("Players online: " + this.onlinePlayers.length);
@@ -43,8 +44,18 @@ function NetworkManager(serverLogic) {
                     player.nickname = message['name'];
                     this.sendToAll(this.getPlayerNicknameUpdate(player));
                 } break;
+                case "Enter Lobby" : { //{message: "Enter Lobby", id: id}
+                    this.serverLogic.lobbyManager.enterLobby(player, message['id']);
+                }break;
+                case "Create Lobby" : { //{message: "Create Lobby", name: name}
+                    var lobbyID = this.serverLogic.lobbyManager.createLobby(message['name']);
+                    this.serverLogic.lobbyManager.enterLobby(player, lobbyID);
+                }break;
+                case "Champion Select" : { //{message: "Champion Select", champion: champ}
+                    player.selectedChampion = message['champion'];
+                    this.sendToAll(this.getPlayerSelectedChampionUpdate(player));
+                }break;
             }
-            //console.log('received: %s', message);
         }));
 
         ws.on('close', CreateFunction(this, () => {
@@ -62,18 +73,68 @@ NetworkManager.prototype.getOnlineList = function() {
     var playerList = [];
     for (var i = this.onlinePlayers.length - 1; i >= 0; i--) {
         var player = this.onlinePlayers[i];
-        playerList.push({id: player.id, name: player.nickname});
+        playerList.push({id: player.id, name: player.nickname, selectedChampion: player.selectedChampion});
     }
     return {message: "Online List", players: playerList};
 };
 NetworkManager.prototype.getPlayerNicknameUpdate = function(player) {
     return {message: "Nickname Update", id: player.id, name: player.nickname};
 };
+
+NetworkManager.prototype.getPlayerSelectedChampionUpdate = function(player) {
+    return {message: "Selected Champion Update", id: player.id, selectedChampion: player.selectedChampion};
+};
 NetworkManager.prototype.getPlayerOnlineMessage = function(player) {
     return {message: "Player Online", id: player.id};
 };
 NetworkManager.prototype.getPlayerOfflineMessage = function(player) {
     return {message: "Player Offline", id: player.id};
+};
+
+NetworkManager.prototype.getSelfInLobbyMessage = function(player) {
+    return {message: "Self Lobby", lobbyID: player.inLobby};
+};
+
+NetworkManager.prototype.getLobbyListMessage = function() {
+    var lobbies = [];
+    for (var j = 0; j < this.serverLogic.lobbyManager.lobbies.length; j++) {
+        var lobby = this.serverLogic.lobbyManager.lobbies[j];
+
+        var blueSide = [];
+        for (var i = 0; i < lobby.blueSidePlayers.length; i++) {
+            var p = lobby.blueSidePlayers[i];
+            blueSide.push(p.id);
+        }
+        var redSide = [];
+        for (var i = 0; i < lobby.redSidePlayers.length; i++) {
+            var p = lobby.redSidePlayers[i];
+            redSide.push(p.id);
+        }
+        lobbies.push({id: lobby.id, name: lobby.name, blueSide: blueSide, redSide: redSide});
+    }
+    return {message: "Lobby List", lobbies: lobbies};
+};
+
+NetworkManager.prototype.getLobbyCreateMessage = function(lobby) {
+    return {message: "Lobby Created", id: lobby.id, name: lobby.name};
+};
+
+NetworkManager.prototype.getLobbyDeleteMessage = function(lobby) {
+    return {message: "Lobby Deleted", id: lobby.id};
+};
+
+NetworkManager.prototype.getLobbyUpdateMessage = function(lobby) {
+    var blueSide = [];
+    for (var i = 0; i < lobby.blueSidePlayers.length; i++) {
+        var p = lobby.blueSidePlayers[i];
+        blueSide.push(p.id);
+    }
+    var redSide = [];
+    for (var i = 0; i < lobby.redSidePlayers.length; i++) {
+        var p = lobby.redSidePlayers[i];
+        redSide.push(p.id);
+    }
+    return {message: "Lobby Updated", id: lobby.id, name: lobby.name, blueSide: blueSide, redSide: redSide};
 };
 
 NetworkManager.prototype.sendToAll = function(object) {
