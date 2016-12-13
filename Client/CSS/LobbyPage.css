@@ -1,0 +1,57 @@
+.LobbyPage_MainDiv {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    top: 0px;
+    left: 0px;
+    margin: 0;
+}
+.LobbyPage_LobbyListDiv {
+    position: absolute;
+    width: 200px;
+    left: 0px;
+    top: 0px;
+    height: calc(100% - 30px);
+    box-sizing: border-box;
+    border: 1px solid white;
+}
+.LobbyPage_LobbyListItem {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 25px;
+    text-align: center;
+    color: white;
+    box-sizing: border-box;
+    border: 1px solid white;
+}
+.LobbyPage_CreateLobbyDiv {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 30px;
+    box-sizing: border-box;
+    border: 1px solid white;
+    width: 200px;
+    text-align: center;
+}
+.LobbyPage_CreateLobbyButton {
+    margin-top: 3px;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.LobbyPage_LobbyViewDiv {
+    position: absolute;
+    left: 200px;
+    top: 0px;
+    width: calc(100% - 200px);
+    height: 100%;
+    box-sizing: border-box;
+}
+.LobbyPage_NoLobbySelectedDiv {
+    color: white;
+    width: 100%;
+    text-align: center;
+}

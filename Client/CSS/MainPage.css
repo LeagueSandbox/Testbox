@@ -50,8 +50,46 @@ position: absolute;
     text-align: left;
     color: white;
 }
+.MainPage_OnlinePlayerChampionDiv {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 100%;
+    text-align: right;
+    color: white;
+}
 .MainPage_OnlinePlayerNameDiv {
     width: 100%;
     text-align: center;
     color: white;
+}
+.MainPage_ChampionDiv {
+    position: absolute;
+    width: calc(100% - 200px);
+    left: 200px;
+    box-sizing: border-box;
+    top: 0px;
+    height: 50px;
+    border: solid 1px white;
+}
+.MainPage_ChampionDivLabel {
+    float: left;
+    margin-left: calc(50% - 140px);
+    line-height: 50px;
+    color: white;
+    font-size: 25px;
+}
+.MainPage_ChampionSelect {
+float: left;
+    margin-top: 10px;
+    display: inline-block;
+    font-size: 25px;
+}
+.MainPage_LobbyContainer {
+    position: absolute;
+    left: 200px;
+    box-sizing: border-box;
+    top: 50px;
+    width: calc(100% - 200px);
+    height: calc(100% - 50px - 125px);
 }

@@ -54,7 +54,7 @@ NetworkManager.prototype.connectToServer = function() {
                 var p = new Player();
                 p.id = message['id'];
                 p.nickname = p.id + '';
-                this.onlinePlayers.push(p);
+                this.onlinePlayers.unshift(p);
                 this.appLogic.mainPage.updateOnlineList();
             }break;
             case "Player Offline": {//{message: "Player Offline", id: player.id};
@@ -78,6 +78,18 @@ NetworkManager.prototype.connectToServer = function() {
     });
 };
 
+NetworkManager.prototype.sendChampionSelectChange = function(champ) {
+    this.send({message: "Champion Select", champion: champ});
+};
+
+NetworkManager.prototype.sendCreateLobby = function(name) {
+    this.send({message: "Create Lobby", name: name});
+};
+
+NetworkManager.prototype.enterLobby = function(id) {
+    this.send({message: "Enter Lobby", id: id});
+};
+
 NetworkManager.prototype.sendNickname = function() {
     this.send({message: "Nickname", name: this.appLogic.appData.nickname});
 };
@@ -93,4 +105,5 @@ NetworkManager.prototype.send = function(object) {
 function Player() {
     this.id = -1;
     this.nickname = "";
+    this.selectedChampion = "Ezreal";
 }

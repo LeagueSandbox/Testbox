@@ -2,6 +2,12 @@
  * Created by Matt on 10/17/16.
  */
 
+const ipcRenderer = require('electron').ipcRenderer
+
+window.prompt = function(title, val){
+    return ipcRenderer.sendSync('prompt', {title, val})
+}
+
 //This function is a constructor that details what CreateElement does
 function CreateElement(options) {
     //type : Element type to create
@@ -35,6 +41,8 @@ function CreateElement(options) {
         if (options.hasOwnProperty('onMouseMove')) element.onmousemove = options['onMouseMove'];
         if (options.hasOwnProperty('onMouseDown')) element.onmousedown = options['onMouseDown'];
         if (options.hasOwnProperty('onMouseUp')) element.onmouseup = options['onMouseUp'];
+        if (options.hasOwnProperty('OnChange')) element.onchange = options['OnChange'];
+        if (options.hasOwnProperty('value')) element.value = options['value'];
         if (options.hasOwnProperty('elements')) {
             var elements = options['elements'];
             for (var i = 0; i < elements.length; i++) {
