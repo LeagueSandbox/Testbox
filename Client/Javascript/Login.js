@@ -17,6 +17,19 @@ function Login(appLogic) {
             , onClick: CreateFunction(this, this.loginButtonClicked)})
     ]});
     this.leaguePathInput.placeholder = 'C:\/League-of-Legends-4-20\/';
+
+    if (localStorage.getItem("path") != undefined) {
+        this.leaguePathInput.value = localStorage.getItem("path");
+    }
+    if (localStorage.getItem("host") != undefined) {
+        this.hostInput.value = localStorage.getItem("host");
+    }
+    if (localStorage.getItem("port") != undefined) {
+        this.portInput.value = localStorage.getItem("port");
+    }
+    if (localStorage.getItem("name") != undefined) {
+        this.nicknameInput.value = localStorage.getItem("name");
+    }
 }
 Login.prototype.loginButtonClicked = function() {
     if (this.leaguePathInput.value.length <= 0) {
@@ -44,6 +57,10 @@ Login.prototype.loginButtonClicked = function() {
     this.appLogic.appData.port = this.portInput.value;
     this.appLogic.networkManager.connectToServer();
 
+    localStorage.setItem("host", this.hostInput.value);
+    localStorage.setItem("path", this.leaguePathInput.value);
+    localStorage.setItem("name", this.nicknameInput.value);
+    localStorage.setItem("port", this.portInput.value);
 };
 
 Login.prototype.getDiv = function() {

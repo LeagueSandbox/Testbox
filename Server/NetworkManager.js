@@ -19,9 +19,12 @@ function NetworkManager(serverLogic) {
         var player = new Player(ws);
         player.id = this.currentPlayerID;
         this.currentPlayerID++;
+        this.sendToPlayer(player, this.getOnlineList());
         this.onlinePlayers.push(player);
         console.log("Player connected "+ this.currentPlayerID);
         console.log("Players online: " + this.onlinePlayers.length);
+
+        this.sendToAll(this.getPlayerOnlineMessage(player));
 
         ws.on('message', CreateFunction(this, function(messageString) {
             var message = null;
@@ -38,6 +41,7 @@ function NetworkManager(serverLogic) {
                 } break;
                 case "Nickname" : {
                     player.nickname = message['name'];
+                    this.sendToAll(this.getPlayerNicknameUpdate(player));
                 } break;
             }
             //console.log('received: %s', message);
@@ -47,11 +51,30 @@ function NetworkManager(serverLogic) {
             this.onlinePlayers.splice(this.onlinePlayers.indexOf(player), 1);
             console.log("Player disconnected "+ this.currentPlayerID);
             console.log("Players online: " + this.onlinePlayers.length);
+            this.sendToAll(this.getPlayerOfflineMessage(player));
         }));
 
         //ws.send('something');
     }));
 }
+
+NetworkManager.prototype.getOnlineList = function() {
+    var playerList = [];
+    for (var i = this.onlinePlayers.length - 1; i >= 0; i--) {
+        var player = this.onlinePlayers[i];
+        playerList.push({id: player.id, name: player.nickname});
+    }
+    return {message: "Online List", players: playerList};
+};
+NetworkManager.prototype.getPlayerNicknameUpdate = function(player) {
+    return {message: "Nickname Update", id: player.id, name: player.nickname};
+};
+NetworkManager.prototype.getPlayerOnlineMessage = function(player) {
+    return {message: "Player Online", id: player.id};
+};
+NetworkManager.prototype.getPlayerOfflineMessage = function(player) {
+    return {message: "Player Offline", id: player.id};
+};
 
 NetworkManager.prototype.sendToAll = function(object) {
     var sendString = JSON.stringify(object);
