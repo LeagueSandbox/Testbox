@@ -82,6 +82,8 @@ LobbyManager.prototype.startGame = function(lobbyID) {
     var lobby = this.getLobbyForID(lobbyID);
 
     //TODO : Start Game
+    var json = lobby.buildGameJSON();
+    this.serverLogic.startGameServer(json);
 
 
     this.deleteLobby(lobby);
