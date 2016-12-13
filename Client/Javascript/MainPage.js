@@ -29,6 +29,20 @@ MainPage.prototype.addToChat = function(chat) {
     }));
 };
 
+MainPage.prototype.updateOnlineList = function() {
+    while (this.onlineBoxDiv.hasChildNodes()) {
+        this.onlineBoxDiv.removeChild(this.onlineBoxDiv.lastChild);
+    }
+    for (var i = 0; i < this.appLogic.networkManager.onlinePlayers.length; i++) {
+        var player = this.appLogic.networkManager.onlinePlayers[i];
+        var playerDiv = CreateElement({type: 'div', class: 'MainPage_OnlinePlayerDiv', elements: [
+            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerIDDiv', text: player.id}),
+            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerNameDiv', text: player.nickname})
+        ]});
+        this.onlineBoxDiv.appendChild(playerDiv);
+    }
+};
+
 MainPage.prototype.getDiv = function() {
     return this.mainDiv;
 }
