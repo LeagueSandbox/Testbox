@@ -41,7 +41,8 @@ function CreateElement(options) {
         if (options.hasOwnProperty('onMouseMove')) element.onmousemove = options['onMouseMove'];
         if (options.hasOwnProperty('onMouseDown')) element.onmousedown = options['onMouseDown'];
         if (options.hasOwnProperty('onMouseUp')) element.onmouseup = options['onMouseUp'];
-        if (options.hasOwnProperty('OnChange')) element.onchange = options['OnChange'];
+        if (options.hasOwnProperty('onChange')) element.onchange = options['onChange'];
+        if (options.hasOwnProperty('onInput')) element.oninput = options['onInput'];
         if (options.hasOwnProperty('value')) element.value = options['value'];
         if (options.hasOwnProperty('elements')) {
             var elements = options['elements'];

@@ -21,23 +21,27 @@ LobbyManager.prototype.createLobby = function(name) {
     return lobby.id;
 };
 LobbyManager.prototype.enterLobby = function(player, lobbyID) {
-    this.removePlayerFromLobbies(player);
+    this.removePlayerFromLobby(player);
 
     var lobby = this.getLobbyForID(lobbyID);
     if (lobby == null) return;
     lobby.blueSidePlayers.push(player);
 
+    player.inLobby = lobbyID;
+
     this.serverLogic.networkManager.sendToAll(this.serverLogic.networkManager.getLobbyUpdateMessage(lobby));
+
+    this.serverLogic.networkManager.sendToPlayer(player, this.serverLogic.networkManager.getSelfInLobbyMessage(player));
 };
 LobbyManager.prototype.removePlayerFromLobby = function(player) {
     if (player.inLobby == -1) return;
     var lobby = this.getLobbyForID(player.inLobby);
     if (lobby == null) return;
-    lobby.removePlayerFromLobby(player);
+    lobby.removePlayer(player);
 
     this.serverLogic.networkManager.sendToAll(this.serverLogic.networkManager.getLobbyUpdateMessage(lobby));
 
-    this.server.networkManager.sendToPlayer(player, this.server.networkManager.getSelfInLobbyMessage(player));
+    this.serverLogic.networkManager.sendToPlayer(player, this.serverLogic.networkManager.getSelfInLobbyMessage(player));
 
     if (lobby.getNumberOfPlayers() == 0) {
         this.deleteLobby(lobby);

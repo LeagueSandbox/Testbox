@@ -10,16 +10,18 @@ function LobbyPage(appLogic) {
         ]}),
         this.createLobbyDiv = CreateElement({type: 'div', class: 'LobbyPage_CreateLobbyDiv', elements: [
             CreateElement({type: 'div', class: 'LobbyPage_CreateLobbyButton', elements: [
-                CreateElement({type: 'button', text: 'Create', onClick: CreateFunction(this, this.createLobby)})
+                CreateElement({type: 'button', text: 'Create', onClick: CreateFunction(this, this.createLobbyButton)})
             ]})
         ]}),
         this.lobbyViewDiv = CreateElement({type: 'div', class: 'LobbyPage_LobbyViewDiv', elements: [
-            CreateElement({type: 'div', class: 'LobbyPage_NoLobbySelectedDiv', text: 'Please select or create a lobby.'})
+            this.noLobbyDiv = CreateElement({type: 'div', class: 'LobbyPage_NoLobbySelectedDiv', text: 'Please select or create a lobby.'})
         ]})
     ]});
+
+    this.lobbies = [];
 }
 
-LobbyPage.prototype.createLobby = function() {
+LobbyPage.prototype.createLobbyButton = function() {
     var name = prompt("Enter name of the new lobby: ", "");
 
     if (name != null) {
@@ -27,6 +29,132 @@ LobbyPage.prototype.createLobby = function() {
     }
 };
 
+LobbyPage.prototype.updateSelfDisplay = function() {
+    var selectedLobbyID = this.appLogic.networkManager.selfLobbyID;
+    var lobby = this.getLobbyForID(selectedLobbyID);
+    if (lobby == null) {
+        while (this.lobbyViewDiv.hasChildNodes()) {
+            this.lobbyViewDiv.removeChild(this.lobbyViewDiv.lastChild);
+        }
+        this.lobbyViewDiv.appendChild(this.noLobbyDiv);
+    } else {
+        while (this.lobbyViewDiv.hasChildNodes()) {
+            this.lobbyViewDiv.removeChild(this.lobbyViewDiv.lastChild);
+        }
+        this.lobbyViewDiv.appendChild(lobby.getDiv());
+    }
+};
+
+LobbyPage.prototype.updateLobbyList = function(lobbies) {
+    //[{id: lobby.id, name: lobby.name, blueSide: [id], redSide: [id]]
+    for (var i = 0; i < lobbies.length; i++) {
+        var lobby = this.addLobby(lobbies[i]['id'], lobbies[i]['name']);
+        lobby.blueSide = lobbies[i]['blueSide'];
+        lobby.redSide = lobbies[i]['redSide'];
+        lobby.updateDisplay();
+    }
+};
+
+LobbyPage.prototype.addLobby = function(id, name) {
+    var lobby = new Lobby(this);
+    lobby.id = id;
+    lobby.name = name;
+    this.lobbies.push(lobby);
+
+    lobby.updateDisplay();
+
+    this.lobbyListDiv.appendChild(lobby.getSidebarDiv());
+
+    console.log("Added lobby to list");
+
+    return lobby;
+};
+
+LobbyPage.prototype.removeLobby = function(id) {
+    var lobby = this.getLobbyForID(id);
+    this.lobbies.splice(this.lobbies.indexOf(lobby), 1);
+    lobby.getSidebarDiv().remove();
+};
+
+LobbyPage.prototype.updateLobby = function(id, name, blueSide, redSide) {
+    var lobby = this.getLobbyForID(id);
+    if (lobby == null) return;
+    lobby.name = name;
+    lobby.blueSide = blueSide;
+    lobby.redSide = redSide;
+    lobby.updateDisplay();
+};
+
 LobbyPage.prototype.getDiv = function() {
+    return this.mainDiv;
+};
+
+LobbyPage.prototype.getLobbyForID = function(id) {
+    for (var i = 0; i < this.lobbies.length; i++) {
+        var lobby = this.lobbies[i];
+        if (lobby.id == id) return lobby;
+    }
+    return null;
+};
+
+
+function Lobby(lobbyPage) {
+    this.lobbyPage = lobbyPage;
+    this.id = -1;
+    this.name = "";
+    this.blueSide = [];
+    this.redSide = [];
+    this.mainDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_MainDiv', elements: [
+        this.titleDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_TitleDiv'}),
+        this.blueSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_BlueSideDiv'}),
+        this.redSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_RedSideDiv'}),
+        this.startButton = CreateElement({type: 'button', class: 'LobbyPage_Lobby_StartButton', text: 'Start Game'})
+    ]});
+
+    this.sideBarDisplayDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayDiv', elements:[
+        this.sideBarDisplayTitleDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayTitleDiv'}),
+        this.sideBarDisplayPlayersDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayPlayersDiv'})
+    ]});
+}
+
+Lobby.prototype.updateDisplay = function() {
+    this.titleDiv.innerText = "Lobby: " + this.name;
+
+    while (this.blueSideDiv.hasChildNodes()) {
+        this.blueSideDiv.removeChild(this.blueSideDiv.lastChild);
+    }
+    while (this.redSideDiv.hasChildNodes()) {
+        this.redSideDiv.removeChild(this.redSideDiv.lastChild);
+    }
+    for (var i = 0; i < this.blueSide.length; i++) {
+        var playerID = this.blueSide[i];
+        var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
+        var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
+            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
+            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
+            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion})
+        ]});
+        this.blueSideDiv.appendChild(div);
+    }
+    for (var i = 0; i < this.redSide.length; i++) {
+        var playerID = this.redSide[i];
+        var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
+        var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
+            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
+            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
+            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion})
+        ]});
+        this.redSideDiv.appendChild(div);
+    }
+
+    this.sideBarDisplayTitleDiv.innerText = "("+this.id+")" + " " + this.name;
+    this.sideBarDisplayPlayersDiv.innerText = "Players: " + (this.redSide.length + this.blueSide.length);
+};
+
+Lobby.prototype.getSidebarDiv = function() {
+    return this.sideBarDisplayDiv;
+}
+
+Lobby.prototype.getDiv = function() {
     return this.mainDiv;
 };

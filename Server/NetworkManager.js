@@ -29,6 +29,7 @@ function NetworkManager(serverLogic) {
 
         ws.on('message', CreateFunction(this, function(messageString) {
             var message = null;
+            console.log("Got message: " + messageString);
             try {
                 message = JSON.parse(messageString);
             } catch (err) {
@@ -63,6 +64,7 @@ function NetworkManager(serverLogic) {
             console.log("Player disconnected "+ this.currentPlayerID);
             console.log("Players online: " + this.onlinePlayers.length);
             this.sendToAll(this.getPlayerOfflineMessage(player));
+            this.serverLogic.lobbyManager.removePlayerFromLobby(player);
         }));
 
         //ws.send('something');
@@ -141,10 +143,13 @@ NetworkManager.prototype.sendToAll = function(object) {
     var sendString = JSON.stringify(object);
     for (var i = 0; i < this.onlinePlayers.length; i++) {
         var player = this.onlinePlayers[i];
+        if (player.connection.readyState !== OPEN_STATE) continue;
         player.connection.send(sendString);
     }
 };
+var OPEN_STATE =  require('ws').OPEN;
 NetworkManager.prototype.sendToPlayer = function(player, object) {
+    if (player.connection.readyState !== OPEN_STATE) return;
     player.connection.send(JSON.stringify(object));
 };
 

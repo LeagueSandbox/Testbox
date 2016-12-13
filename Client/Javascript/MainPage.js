@@ -12,7 +12,7 @@ function MainPage(appLogic) {
         [
             CreateElement({type: 'div', class: 'MainPage_ChampionDivLabel', text: 'Champion: '}),
             this.championSelect = CreateElement({type: 'select', class: 'MainPage_ChampionSelect',
-                onChange: CreateFunction(this, this.championSelectChange)})
+                onInput: CreateFunction(this, this.championSelectChange)})
         ]}),
         CreateElement({type: 'div', class: 'MainPage_LobbyContainer', elements: [
             (this.lobbyPage = new LobbyPage(this.appLogic)).getDiv()
