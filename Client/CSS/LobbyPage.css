@@ -174,3 +174,13 @@ position: absolute;
     top: 0px;
     line-height: 20px;
 }
+.LobbyPage_Lobby_PlayerItemMoveRightDiv {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+.LobbyPage_Lobby_PlayerItemMoveLeftDiv {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+}

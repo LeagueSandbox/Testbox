@@ -113,6 +113,10 @@ NetworkManager.prototype.connectToServer = function() {
     });
 };
 
+NetworkManager.prototype.sendSwitchPlayerSide = function(playerID, lobbyID) {
+    this.send({message: "Switch Player Side", lobbyID: lobbyID, playerID: playerID});
+};
+
 NetworkManager.prototype.sendStartGame = function(lobbyID) {
     this.send({message: "Start Game", lobbyID: lobbyID});
 };

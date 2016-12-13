@@ -107,6 +107,10 @@ LobbyPage.prototype.updateLobbyPlayer = function(playerID) {
     }
 };
 
+LobbyPage.prototype.switchPlayerSide = function(playerID, lobbyID) {
+    this.appLogic.networkManager.sendSwitchPlayerSide(playerID, lobbyID);
+};
+
 LobbyPage.prototype.getDiv = function() {
     return this.mainDiv;
 };
@@ -163,25 +167,36 @@ Lobby.prototype.updateDisplay = function() {
     while (this.redSideDiv.hasChildNodes()) {
         this.redSideDiv.removeChild(this.redSideDiv.lastChild);
     }
+
+    var playerSwitchSides = CreateFunction(this, function(playerID){
+        this.lobbyPage.switchPlayerSide(playerID, this.id);
+    });
+
     for (var i = 0; i < this.blueSide.length; i++) {
-        var playerID = this.blueSide[i];
-        var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
-        var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
-            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
-            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
-            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion})
-        ]});
-        this.blueSideDiv.appendChild(div);
+        (function(i){
+            var playerID = this.blueSide[i];
+            var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
+            var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
+                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
+                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
+                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion}),
+                CreateElement({type: 'button', class: 'LobbyPage_Lobby_PlayerItemMoveRightDiv', text: '>', onClick: CreateFunction(this, function(){playerSwitchSides(playerID);})})
+            ]});
+            this.blueSideDiv.appendChild(div);
+        }).call(this, i);
     }
     for (var i = 0; i < this.redSide.length; i++) {
-        var playerID = this.redSide[i];
-        var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
-        var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
-            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
-            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
-            CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion})
-        ]});
-        this.redSideDiv.appendChild(div);
+        (function(i){
+            var playerID = this.redSide[i];
+            var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
+            var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
+                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
+                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
+                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion}),
+                CreateElement({type: 'button', class: 'LobbyPage_Lobby_PlayerItemMoveLeftDiv', text: '<', onClick: CreateFunction(this, function(){playerSwitchSides(playerID);})})
+            ]});
+            this.redSideDiv.appendChild(div);
+        }).call(this, i);
     }
 
     this.sideBarDisplayTitleDiv.innerText = "("+this.id+")" + " " + this.name;

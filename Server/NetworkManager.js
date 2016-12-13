@@ -60,6 +60,9 @@ function NetworkManager(serverLogic) {
                     var lobbyID = message['lobbyID'];
                     this.serverLogic.lobbyManager.startGame(lobbyID);
                 }break;
+                case "Switch Player Side" : { //{message: "Switch Player Side", lobbyID: lobbyID, playerID: playerID}
+this.serverLogic.lobbyManager.switchPlayerSide(message['playerID'], message['lobbyID']);
+                }break;
             }
         }));
 

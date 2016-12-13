@@ -20,6 +20,36 @@ LobbyManager.prototype.createLobby = function(name) {
 
     return lobby.id;
 };
+LobbyManager.prototype.switchPlayerSide = function(playerID, lobbyID) {
+    var lobby = this.getLobbyForID(lobbyID);
+    if (lobby == null) return;
+
+    var player = null;
+    var playerOnBlue = false;
+    var playerOnRed = false;
+    for (var i = 0; i < lobby.blueSidePlayers.length; i++) {
+        if (lobby.blueSidePlayers[i].id == playerID) {
+            player = lobby.blueSidePlayers[i];
+            playerOnBlue = true;
+        }
+    }
+    for (var i = 0; i < lobby.redSidePlayers.length; i++) {
+        if (lobby.redSidePlayers[i].id == playerID) {
+            player = lobby.redSidePlayers[i];
+            playerOnRed = true;
+        }
+    }
+    if (player == null) return;
+    if (playerOnBlue) {
+        lobby.blueSidePlayers.splice(lobby.blueSidePlayers.indexOf(player), 1);
+        lobby.redSidePlayers.push(player);
+    }
+    if (playerOnRed) {
+        lobby.redSidePlayers.splice(lobby.redSidePlayers.indexOf(player), 1);
+        lobby.blueSidePlayers.push(player);
+    }
+    this.serverLogic.networkManager.sendToAll(this.serverLogic.networkManager.getLobbyUpdateMessage(lobby));
+};
 LobbyManager.prototype.enterLobby = function(player, lobbyID) {
     this.removePlayerFromLobby(player);
 
