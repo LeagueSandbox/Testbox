@@ -10,7 +10,7 @@ function Login(appLogic) {
         CreateElement({type: 'div', text: 'Nickname: ', class: 'Login_Label'}),
         this.nicknameInput = CreateElement({type: 'input', class: 'Login_NameInput'}),
         CreateElement({type: 'div', text: 'Host: ', class: 'Login_Label'}),
-        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput', text: '127.0.0.1'}),
+        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput', text: 'league.paradigm-network.com'}),
         CreateElement({type: 'div', text: 'Port: ', class: 'Login_Label'}),
         this.portInput = CreateElement({type: 'input', class: 'Login_PortInput', text: '7777'}),
         this.loginButton = CreateElement({type: 'button', text: 'Login', class: 'Login_Button'
@@ -18,16 +18,16 @@ function Login(appLogic) {
     ]});
     this.leaguePathInput.placeholder = 'C:\/League-of-Legends-4-20\/';
 
-    if (localStorage.getItem("path") != undefined) {
+    if (localStorage.getItem("path") != undefined && localStorage.getItem("path") != "") {
         this.leaguePathInput.value = localStorage.getItem("path");
     }
-    if (localStorage.getItem("host") != undefined) {
+    if (localStorage.getItem("host") != undefined && localStorage.getItem("host") != "") {
         this.hostInput.value = localStorage.getItem("host");
     }
-    if (localStorage.getItem("port") != undefined) {
+    if (localStorage.getItem("port") != undefined && localStorage.getItem("port") != "") {
         this.portInput.value = localStorage.getItem("port");
     }
-    if (localStorage.getItem("name") != undefined) {
+    if (localStorage.getItem("name") != undefined && localStorage.getItem("name") != "") {
         this.nicknameInput.value = localStorage.getItem("name");
     }
 }

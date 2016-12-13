@@ -6,7 +6,8 @@ function MainPage(appLogic) {
     this.appLogic = appLogic;
     this.mainDiv = CreateElement({type: 'div', class: 'MainPage_MainDiv', elements: [
         this.chatBoxDiv = CreateElement({type: 'div', class: 'MainPage_ChatBoxDiv'}),
-        this.chatBoxInput = CreateElement({type: 'input', class: 'MainPage_ChatBoxInput'})
+        this.chatBoxInput = CreateElement({type: 'input', class: 'MainPage_ChatBoxInput'}),
+        this.onlineBoxDiv = CreateElement({type: 'div', class: 'MainPage_OnlineBoxDiv'})
     ]});
     this.chatBoxInput.placeholder = "Type text...";
     this.chatBoxInput.onkeydown = CreateFunction(this, this.chatInputKeyDown);
