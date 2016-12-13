@@ -101,28 +101,76 @@ position: absolute;
     width: 100px;
     left: calc(50% - 50px);
 }
-.LobbyPage_Lobby_SidebarDisplayDiv {
 
+.LobbyPage_Selected {
+    background-color: #006600;
+}
+
+.LobbyPage_Lobby_SidebarDisplayDiv {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    border: solid 1px white;
+    position: relative;
 }
 .LobbyPage_Lobby_SidebarDisplayTitleDiv {
-
+    color: white;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    line-height: 20px;
 }
 .LobbyPage_Lobby_SidebarDisplayPlayersDiv {
-
+    color: white;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    line-height: 20px;
 }
 
 
 
 
 .LobbyPage_Lobby_PlayerItemDiv {
-
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    border: solid 1px white;
+    position: relative;
 }
 .LobbyPage_Lobby_PlayerItemNameDiv {
-
+    color: white;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    line-height: 20px;
+    font-size: 20px;
 }
 .LobbyPage_Lobby_PlayerItemIDDiv {
-
+    color: white;
+    width: 100%;
+    height: 20px;
+    text-align: left;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    line-height: 20px;
 }
 .LobbyPage_Lobby_PlayerItemChampionDiv {
-
+    color: white;
+    width: 100%;
+    height: 20px;
+    text-align: right;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    line-height: 20px;
 }

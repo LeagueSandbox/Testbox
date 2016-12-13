@@ -21,6 +21,10 @@ function LobbyPage(appLogic) {
     this.lobbies = [];
 }
 
+LobbyPage.prototype.startGame = function(lobbyID) {
+    this.appLogic.networkManager.sendStartGame(lobbyID);
+};
+
 LobbyPage.prototype.createLobbyButton = function() {
     var name = prompt("Enter name of the new lobby: ", "");
 
@@ -29,8 +33,19 @@ LobbyPage.prototype.createLobbyButton = function() {
     }
 };
 
+LobbyPage.prototype.lobbyClicked = function(lobby) {
+    if (lobby.id == this.appLogic.networkManager.selfLobbyID) return;
+    this.appLogic.networkManager.sendEnterLobby(lobby.id);
+};
+
 LobbyPage.prototype.updateSelfDisplay = function() {
     var selectedLobbyID = this.appLogic.networkManager.selfLobbyID;
+
+    //Set all lobbies to not selected
+    for (var i = 0; i < this.lobbies.length; i++) {
+        this.lobbies[i].setSidebarSelected(false);
+    }
+
     var lobby = this.getLobbyForID(selectedLobbyID);
     if (lobby == null) {
         while (this.lobbyViewDiv.hasChildNodes()) {
@@ -42,6 +57,7 @@ LobbyPage.prototype.updateSelfDisplay = function() {
             this.lobbyViewDiv.removeChild(this.lobbyViewDiv.lastChild);
         }
         this.lobbyViewDiv.appendChild(lobby.getDiv());
+        lobby.setSidebarSelected(true);
     }
 };
 
@@ -65,8 +81,6 @@ LobbyPage.prototype.addLobby = function(id, name) {
 
     this.lobbyListDiv.appendChild(lobby.getSidebarDiv());
 
-    console.log("Added lobby to list");
-
     return lobby;
 };
 
@@ -83,6 +97,14 @@ LobbyPage.prototype.updateLobby = function(id, name, blueSide, redSide) {
     lobby.blueSide = blueSide;
     lobby.redSide = redSide;
     lobby.updateDisplay();
+};
+
+LobbyPage.prototype.updateLobbyPlayer = function(playerID) {
+    for (var i = 0; i < this.lobbies.length; i++) {
+        if (this.lobbies[i].hasPlayerWithID(playerID)) {
+            this.lobbies[i].updateDisplay();
+        }
+    }
 };
 
 LobbyPage.prototype.getDiv = function() {
@@ -108,14 +130,29 @@ function Lobby(lobbyPage) {
         this.titleDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_TitleDiv'}),
         this.blueSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_BlueSideDiv'}),
         this.redSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_RedSideDiv'}),
-        this.startButton = CreateElement({type: 'button', class: 'LobbyPage_Lobby_StartButton', text: 'Start Game'})
+        this.startButton = CreateElement({type: 'button', class: 'LobbyPage_Lobby_StartButton',
+            text: 'Start Game', onClick: CreateFunction(this, function(){this.lobbyPage.startGame(this.id);})})
     ]});
 
     this.sideBarDisplayDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayDiv', elements:[
         this.sideBarDisplayTitleDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayTitleDiv'}),
         this.sideBarDisplayPlayersDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayPlayersDiv'})
     ]});
+
+    this.sideBarDisplayDiv.onclick = CreateFunction(this, function(){
+        this.lobbyPage.lobbyClicked(this);
+    });
 }
+
+Lobby.prototype.hasPlayerWithID = function(playerID) {
+    for (var i = 0; i < this.blueSide.length; i++) {
+        if (this.blueSide[i] == playerID) return true;
+    }
+    for (var i = 0; i < this.redSide.length; i++) {
+        if (this.redSide[i] == playerID) return true;
+    }
+    return false;
+};
 
 Lobby.prototype.updateDisplay = function() {
     this.titleDiv.innerText = "Lobby: " + this.name;
@@ -149,6 +186,14 @@ Lobby.prototype.updateDisplay = function() {
 
     this.sideBarDisplayTitleDiv.innerText = "("+this.id+")" + " " + this.name;
     this.sideBarDisplayPlayersDiv.innerText = "Players: " + (this.redSide.length + this.blueSide.length);
+};
+
+Lobby.prototype.setSidebarSelected = function(selected) {
+    if (selected) {
+        this.sideBarDisplayDiv.className = "LobbyPage_Lobby_SidebarDisplayDiv LobbyPage_Selected";
+    } else {
+        this.sideBarDisplayDiv.className = "LobbyPage_Lobby_SidebarDisplayDiv";
+    }
 };
 
 Lobby.prototype.getSidebarDiv = function() {

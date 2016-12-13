@@ -56,6 +56,10 @@ function NetworkManager(serverLogic) {
                     player.selectedChampion = message['champion'];
                     this.sendToAll(this.getPlayerSelectedChampionUpdate(player));
                 }break;
+                case "Start Game" : { //{message: "Champion Select", champion: champ}
+                    var lobbyID = message['lobbyID'];
+                    this.serverLogic.lobbyManager.startGame(lobbyID);
+                }break;
             }
         }));
 

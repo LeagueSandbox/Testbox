@@ -48,17 +48,26 @@ LobbyManager.prototype.removePlayerFromLobby = function(player) {
     }
 };
 
+LobbyManager.prototype.startGame = function(lobbyID) {
+    var lobby = this.getLobbyForID(lobbyID);
+
+    //TODO : Start Game
+
+
+    this.deleteLobby(lobby);
+};
+
 LobbyManager.prototype.deleteLobby = function(lobby) {
     //Remove all players from lobby
     while(lobby.blueSidePlayers.length > 0) {
-        var p = lobby.blueSidePlayers[i];
-        lobby.removePlayerFromLobby(p);
-        this.server.networkManager.sendToPlayer(p, this.server.networkManager.getSelfInLobbyMessage(p));
+        var p = lobby.blueSidePlayers[0];
+        lobby.removePlayer(p);
+        this.serverLogic.networkManager.sendToPlayer(p, this.serverLogic.networkManager.getSelfInLobbyMessage(p));
     }
     while(lobby.redSidePlayers.length > 0) {
-        var p = lobby.redSidePlayers[i];
-        lobby.removePlayerFromLobby(p);
-        this.server.networkManager.sendToPlayer(p, this.server.networkManager.getSelfInLobbyMessage(p));
+        var p = lobby.redSidePlayers[0];
+        lobby.removePlayer(p);
+        this.serverLogic.networkManager.sendToPlayer(p, this.serverLogic.networkManager.getSelfInLobbyMessage(p));
     }
     this.lobbies.splice(this.lobbies.indexOf(lobby), 1);
 

@@ -79,6 +79,7 @@ NetworkManager.prototype.connectToServer = function() {
                     }
                 }
                 this.appLogic.mainPage.updateOnlineList();
+                this.appLogic.mainPage.lobbyPage.updateLobbyPlayer(message['id']);
             }break;
             //{message: "Self Lobby", lobbyID: player.inLobby}
             case "Self Lobby": {
@@ -112,6 +113,10 @@ NetworkManager.prototype.connectToServer = function() {
     });
 };
 
+NetworkManager.prototype.sendStartGame = function(lobbyID) {
+    this.send({message: "Start Game", lobbyID: lobbyID});
+};
+
 NetworkManager.prototype.sendChampionSelectChange = function(champ) {
     this.send({message: "Champion Select", champion: champ});
 };
@@ -120,7 +125,7 @@ NetworkManager.prototype.sendCreateLobby = function(name) {
     this.send({message: "Create Lobby", name: name});
 };
 
-NetworkManager.prototype.enterLobby = function(id) {
+NetworkManager.prototype.sendEnterLobby = function(id) {
     this.send({message: "Enter Lobby", id: id});
 };
 
