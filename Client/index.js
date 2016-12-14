@@ -1,4 +1,5 @@
 'use strict';
+
 const electron = require('electron');
 
 const app = electron.app;
@@ -77,3 +78,49 @@ function onClosed() {
     // for multiple windows store them in an array
     mainWindow = null;
 }
+
+console.log("Auto updater: " + electron.autoUpdater);
+
+var os = require('os');
+var autoUpdater = electron.autoUpdater;
+
+var platform = os.platform() + '_' + os.arch();
+var version = app.getVersion();
+
+autoUpdater.setFeedURL('http://league.paradigm-network.com:1337/update/'+platform+'/'+version);
+console.log('URL: ' + 'http://league.paradigm-network.com:1337/update/'+platform+'/'+version);
+
+autoUpdater.on('checking-for-update', function() {
+    console.log("Checking for update");
+});
+autoUpdater.on('update-available', function() {
+    console.log("Update available");
+});
+autoUpdater.on('update-not-available', function() {
+    console.log("Update not available");
+});
+autoUpdater.on('error', function(err) {
+    console.log("Update error: " + err);
+});
+
+// event handling after download new release
+autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
+    console.log("Update downloaded");
+    // confirm install or not to user
+    var index = dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        buttons: [i18n.__('Restart'), i18n.__('Later')],
+        title: "Typetalk",
+        message: i18n.__('The new version has been downloaded. Please restart the application to apply the updates.'),
+        detail: releaseName + "\n\n" + releaseNotes
+    });
+
+    if (index === 1) {
+        return;
+    }
+
+    // restart app, then update will be applied
+    quitAndUpdate();
+});
+
+autoUpdater.checkForUpdates();

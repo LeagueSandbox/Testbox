@@ -1,7 +1,7 @@
 {
   "name": "LeagueUI",
   "productName": "LeagueUI",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "LeagueUI - A Public Multiplayer Testing Environment for League Sandbox",
   "license": "MIT",
   "repository": "user/repo",
@@ -10,11 +10,9 @@
     "email": "",
     "url": ""
   },
-
-"build": {
-  "appId": "MatthewFrench.LeagueUI"
-},
-
+  "build": {
+    "appId": "MatthewFrench.LeagueUI"
+  },
   "scripts": {
     "test": "xo",
     "start": "electron .",
@@ -36,6 +34,7 @@
     "devtron": "^1.1.0",
     "electron": "^1.4.12",
     "electron-packager": "^8.4.0",
+    "electron-squirrel-startup": "^1.0.0",
     "xo": "^0.16.0"
   },
   "xo": {
