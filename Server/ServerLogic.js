@@ -6,13 +6,23 @@ function ServerLogic() {
 	this.lobbyManager = new LobbyManager(this);
 }
 
-ServerLogic.prototype.startGameServer = function(gameJSON) {
+ServerLogic.prototype.startGameServer = function(gameJSON, port, callback) {
     const exec = require('child_process').spawn;
-    const game = exec('GameServerApp.exe', ['--port', 5223, '--configJSON', JSON.stringify(gameJSON)], {cwd: '../../GameServer/GameServerApp/bin/Debug'});
+    const game = exec('GameServerApp.exe', ['--port', port, '--configJSON', JSON.stringify(gameJSON)], {cwd: '../../GameServer/GameServerApp/bin/Release'});
 
-/*
+
+    var waitingForBoot = true;
     game.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
+
+        if (waitingForBoot) {
+            console.log(`stdout: ${data}`);
+            if (data.indexOf("Game is ready.") !== -1) {
+                console.log("Game is ready, doing callback");
+                waitingForBoot = false;
+                callback();
+            }
+        }
+
     });
 
     game.stderr.on('data', (data) => {
@@ -22,7 +32,7 @@ ServerLogic.prototype.startGameServer = function(gameJSON) {
     game.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
     });
-    */
+
 };
 
 var serverInstance = new ServerLogic();

@@ -2,13 +2,15 @@
  * Created by Matt on 12/13/2016.
  */
 var Lobby = require('./Lobby');
+var Utility = require('./Utility/Utility');
+var CreateFunction = Utility.CreateFunction;
 
 function LobbyManager(serverLogic) {
     this.serverLogic = serverLogic;
     this.currentLobbyID = 0;
     this.lobbies = [];
 }
-LobbyManager.prototype.createLobby = function(name) {
+LobbyManager.prototype.createLobby = function (name) {
     var lobby = new Lobby();
     lobby.id = this.currentLobbyID;
     this.currentLobbyID++;
@@ -20,7 +22,7 @@ LobbyManager.prototype.createLobby = function(name) {
 
     return lobby.id;
 };
-LobbyManager.prototype.switchPlayerSide = function(playerID, lobbyID) {
+LobbyManager.prototype.switchPlayerSide = function (playerID, lobbyID) {
     var lobby = this.getLobbyForID(lobbyID);
     if (lobby == null) return;
 
@@ -50,7 +52,7 @@ LobbyManager.prototype.switchPlayerSide = function(playerID, lobbyID) {
     }
     this.serverLogic.networkManager.sendToAll(this.serverLogic.networkManager.getLobbyUpdateMessage(lobby));
 };
-LobbyManager.prototype.enterLobby = function(player, lobbyID) {
+LobbyManager.prototype.enterLobby = function (player, lobbyID) {
     this.removePlayerFromLobby(player);
 
     var lobby = this.getLobbyForID(lobbyID);
@@ -63,7 +65,7 @@ LobbyManager.prototype.enterLobby = function(player, lobbyID) {
 
     this.serverLogic.networkManager.sendToPlayer(player, this.serverLogic.networkManager.getSelfInLobbyMessage(player));
 };
-LobbyManager.prototype.removePlayerFromLobby = function(player) {
+LobbyManager.prototype.removePlayerFromLobby = function (player) {
     if (player.inLobby == -1) return;
     var lobby = this.getLobbyForID(player.inLobby);
     if (lobby == null) return;
@@ -78,25 +80,51 @@ LobbyManager.prototype.removePlayerFromLobby = function(player) {
     }
 };
 
-LobbyManager.prototype.startGame = function(lobbyID) {
+LobbyManager.prototype.startGame = function (lobbyID) {
     var lobby = this.getLobbyForID(lobbyID);
-
-    //TODO : Start Game
     var json = lobby.buildGameJSON();
-    this.serverLogic.startGameServer(json);
+
+    const getPort = require('get-port');
+
+    getPort().then(CreateFunction(this, function (port) {
+
+        var players = [];
+
+        for (var i = 0; i < lobby.blueSidePlayers.length; i++) {
+            var player = lobby.blueSidePlayers[i];
+            players.push(player);
+        }
+        for (var i = 0; i < lobby.redSidePlayers.length; i++) {
+            var player = lobby.redSidePlayers[i];
+            players.push(player);
+        }
+        for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+            this.serverLogic.networkManager.sendToPlayer(player, this.serverLogic.networkManager.getWaitingForGameStart());
+        }
+
+        this.deleteLobby(lobby);
 
 
-    this.deleteLobby(lobby);
+        this.serverLogic.startGameServer(json, port, CreateFunction(this, function () {
+            for (var i = 0; i < players.length; i++) {
+                var player = players[i];
+                this.serverLogic.networkManager.sendToPlayer(player, this.serverLogic.networkManager.getStartGame(port, i + 1));
+            }
+
+        }));
+    }));
+
 };
 
-LobbyManager.prototype.deleteLobby = function(lobby) {
+LobbyManager.prototype.deleteLobby = function (lobby) {
     //Remove all players from lobby
-    while(lobby.blueSidePlayers.length > 0) {
+    while (lobby.blueSidePlayers.length > 0) {
         var p = lobby.blueSidePlayers[0];
         lobby.removePlayer(p);
         this.serverLogic.networkManager.sendToPlayer(p, this.serverLogic.networkManager.getSelfInLobbyMessage(p));
     }
-    while(lobby.redSidePlayers.length > 0) {
+    while (lobby.redSidePlayers.length > 0) {
         var p = lobby.redSidePlayers[0];
         lobby.removePlayer(p);
         this.serverLogic.networkManager.sendToPlayer(p, this.serverLogic.networkManager.getSelfInLobbyMessage(p));
@@ -106,14 +134,14 @@ LobbyManager.prototype.deleteLobby = function(lobby) {
     this.serverLogic.networkManager.sendToAll(this.serverLogic.networkManager.getLobbyDeleteMessage(lobby));
 };
 
-LobbyManager.prototype.startLobby = function(id) {
+LobbyManager.prototype.startLobby = function (id) {
     var lobby = this.getLobbyForID(id);
     if (lobby == null) return;
 
     this.deleteLobby(lobby);
 }
 
-LobbyManager.prototype.getLobbyForID = function(id) {
+LobbyManager.prototype.getLobbyForID = function (id) {
     for (var i = 0; i < this.lobbies.length; i++) {
         var lobby = this.lobbies[i];
         if (lobby.id == id) return lobby;

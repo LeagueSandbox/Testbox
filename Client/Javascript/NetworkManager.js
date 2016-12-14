@@ -102,6 +102,14 @@ NetworkManager.prototype.connectToServer = function() {
             case "Lobby Updated" : {
                 this.appLogic.mainPage.lobbyPage.updateLobby(message['id'], message['name'], message['blueSide'], message['redSide']);
             }break;
+            //{message: "Start Game", port: port, playerNum: playerNum}
+            case "Start Game" : {
+                this.appLogic.launchLeagueOfLegends(message['port'], message['playerNum']);
+                this.appLogic.mainPage.setBlockOverlayOff();
+            }break;
+            case "Waiting For Game Start" : {
+                this.appLogic.mainPage.setBlockOverlayOn();
+            }break;
         }
     });
 

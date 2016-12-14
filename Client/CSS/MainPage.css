@@ -6,6 +6,18 @@
     left: 0px;
     margin: 0px;
 }
+.MainPage_BlockOverlay {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 125px);
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.9);
+    text-align: center;
+    line-height: 200px;
+    font-size: 50px;
+    color: white;
+}
 .MainPage_ChatBoxDiv {
     position: absolute;
     height: 100px;

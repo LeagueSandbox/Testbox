@@ -86,8 +86,17 @@ NetworkManager.prototype.getOnlineList = function() {
     }
     return {message: "Online List", players: playerList};
 };
+
+NetworkManager.prototype.getStartGame = function(port, playerNum) {
+    return {message: "Start Game", port: port, playerNum: playerNum};
+};
+
 NetworkManager.prototype.getPlayerNicknameUpdate = function(player) {
     return {message: "Nickname Update", id: player.id, name: player.nickname};
+};
+
+NetworkManager.prototype.getWaitingForGameStart = function() {
+    return {message: 'Waiting For Game Start'};
 };
 
 NetworkManager.prototype.getPlayerSelectedChampionUpdate = function(player) {

@@ -43,3 +43,29 @@ AppLogic.prototype.showLoginPage = function() {
 AppLogic.prototype.showMainPage = function() {
     this.viewDiv.appendChild(this.mainPage.getDiv());
 };
+
+AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
+    var leaguePath = this.appData.leaguePath;
+    if (leaguePath.substr(leaguePath.length - 1) != "\\") {
+        leaguePath = leaguePath + "\\";
+    }
+    leaguePath = leaguePath + "RADS/solutions/lol_game_client_sln/releases/0.0.1.68/deploy/";
+    var leagueExecutable = leaguePath + "League of Legends.exe";
+    leaguePath = leaguePath.replaceAll('\\', '/');
+    leagueExecutable = leagueExecutable.replaceAll('\\', '/');
+
+    console.log("Starting league with path: " + leaguePath);
+    console.log("with executable: " + leagueExecutable);
+
+    console.log("Arguments: " +  "127.0.0.1 "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum);
+
+    const spawn = require('child_process').spawn;
+/*
+Works but stops loading at 16%
+        const game = spawn(leagueExecutable, ["8394", "LoLLauncher.exe", "", "127.0.0.1 "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: leaguePath});
+*/
+//Works after clicking reconnect
+
+    const game = spawn('cmd', ['/c', 'start',"", leagueExecutable,"8394", "LoLLauncher.exe", "", "127.0.0.1 "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: leaguePath});
+
+};

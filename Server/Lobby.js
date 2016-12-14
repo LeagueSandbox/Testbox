@@ -91,7 +91,7 @@ Lobby.prototype.buildGameJSON = function() {
                 rank: "DIAMOND",
                 name: player.nickname,
                 champion: player.selectedChampion,
-                team: "BLUE",
+                team: "RED",
                 skin: 0,
                 summoner1: "HEAL",
                 summoner2: "FLASH",

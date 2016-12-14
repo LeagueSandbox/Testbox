@@ -24,7 +24,16 @@ function MainPage(appLogic) {
     this.championSelect.value = "Ezreal";
     this.chatBoxInput.placeholder = "Type text...";
     this.chatBoxInput.onkeydown = CreateFunction(this, this.chatInputKeyDown);
+
+    this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game is Starting'})
 }
+
+MainPage.prototype.setBlockOverlayOn = function() {
+    this.mainDiv.appendChild(this.blockingOverlay);
+};
+MainPage.prototype.setBlockOverlayOff = function() {
+    this.blockingOverlay.remove();
+};
 
 MainPage.prototype.championSelectChange = function() {
     var champion = this.championSelect.value;
