@@ -54,12 +54,25 @@ Login.prototype.loginButtonClicked = function() {
     if (leaguePath.substr(leaguePath.length - 1) != "\\") {
         leaguePath = leaguePath + "\\";
     }
+    var garenaPath = leaguePath;
     leaguePath = leaguePath + "RADS/solutions/lol_game_client_sln/releases/0.0.1.68/deploy/";
     var leagueExecutable = leaguePath + "League of Legends.exe";
+    var garenaExecutable = garenaPath + "League of Legends.exe";
     leaguePath = leaguePath.replaceAll('\\', '/');
     leagueExecutable = leagueExecutable.replaceAll('\\', '/');
+
+    var hasNormalExecutable = false;
+    var hasGarenaExecutable = false;
     var fs = require('fs');
     if (!fs.existsSync(leagueExecutable)) {
+        hasNormalExecutable = true;
+        //alert("Invalid League of Legends path");
+        //return;
+    }
+    if (!fs.existsSync(garenaExecutable)) {
+        hasGarenaExecutable = true;
+    }
+    if (hasNormalExecutable == false && hasGarenaExecutable == false) {
         alert("Invalid League of Legends path");
         return;
     }
