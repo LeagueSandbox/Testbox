@@ -136,6 +136,13 @@ var callOnReady = function() {
     });
 
     autoUpdater.checkForUpdates();
+
+    var checkRegularly;
+
+    checkRegularly = function() {
+        autoUpdater.checkForUpdates();
+        setTimeout(checkRegularly, 1000 * 60 * 5);
+    }
 };
 
 
