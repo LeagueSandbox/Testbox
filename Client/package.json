@@ -1,8 +1,8 @@
 {
-  "name": "app",
-  "productName": "App",
-  "version": "0.0.0",
-  "description": "",
+  "name": "LeagueUI",
+  "productName": "LeagueUI",
+  "version": "1.0.1",
+  "description": "LeagueUI - A Public Multiplayer Testing Environment for League Sandbox",
   "license": "MIT",
   "repository": "user/repo",
   "author": {
@@ -10,10 +10,17 @@
     "email": "",
     "url": ""
   },
+
+"build": {
+  "appId": "MatthewFrench.LeagueUI"
+},
+
   "scripts": {
     "test": "xo",
     "start": "electron .",
-    "build": "electron-packager . --out=dist --asar --overwrite --all"
+    "buildpackager": "electron-packager . --out=dist --asar --overwrite --all",
+    "pack": "build --dir",
+    "dist": "build"
   },
   "files": [
     "index.js",

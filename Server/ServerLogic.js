@@ -14,8 +14,8 @@ ServerLogic.prototype.startGameServer = function(gameJSON, port, callback) {
     var waitingForBoot = true;
     game.stdout.on('data', (data) => {
 
+        console.log(`stdout: ${data}`);
         if (waitingForBoot) {
-            console.log(`stdout: ${data}`);
             if (data.indexOf("Game is ready.") !== -1) {
                 console.log("Game is ready, doing callback");
                 waitingForBoot = false;

@@ -7,7 +7,9 @@
     "get-port": "^2.1.0",
     "ws": "^1.1.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "get-port": "^2.1.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
