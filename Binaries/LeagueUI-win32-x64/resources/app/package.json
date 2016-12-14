@@ -1,0 +1,41 @@
+{
+  "name": "app",
+  "productName": "App",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "repository": "user/repo",
+  "author": {
+    "name": "",
+    "email": "",
+    "url": ""
+  },
+  "scripts": {
+    "test": "xo",
+    "start": "electron .",
+    "build": "electron-packager . --out=dist --asar --overwrite --all"
+  },
+  "files": [
+    "index.js",
+    "index.html",
+    "index.css"
+  ],
+  "keywords": [
+    "electron-app",
+    "electron"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "devtron": "^1.1.0",
+    "electron": "^1.4.12",
+    "electron-packager": "^8.4.0",
+    "xo": "^0.16.0"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
+  }
+}

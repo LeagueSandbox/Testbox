@@ -24,12 +24,11 @@
     "electron-app",
     "electron"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "devtron": "^1.1.0",
     "electron": "^1.4.12",
-    "electron-packager": "^8.0.0",
+    "electron-packager": "^8.4.0",
     "xo": "^0.16.0"
   },
   "xo": {
