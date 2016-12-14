@@ -49,3 +49,6 @@ Temporary Items
 node_modules/
 Client/.idea/workspace.xml
 Server/.idea/workspace.xml
+
+Client/dist
+Client/dist/win-unpacked/resources/app.asar

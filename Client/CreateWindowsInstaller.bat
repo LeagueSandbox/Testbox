@@ -1,6 +1,6 @@
 
-cd /d %~dp0;
+cd /d %~dp0
 
-cmd /k npm run dist;
+cmd /k npm run dist
 
 PAUSE

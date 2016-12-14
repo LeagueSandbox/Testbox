@@ -1,8 +1,15 @@
-'use strict';
 
 const electron = require('electron');
-
 const app = electron.app;
+
+// this should be placed at top of main.js to handle setup events quickly
+if (handleSquirrelEvent()) {
+    // squirrel event handled and app will exit in 1000ms, so don't do anything else
+    return;
+}
+
+
+//const app = electron.app;
 
 const ipcMain = electron.ipcMain
 
@@ -56,6 +63,8 @@ function createMainWindow() {
         promptResponse = arg
     })
 
+    callOnReady();
+
     return win;
 }
 
@@ -79,48 +88,121 @@ function onClosed() {
     mainWindow = null;
 }
 
-console.log("Auto updater: " + electron.autoUpdater);
+var callOnReady = function() {
 
-var os = require('os');
-var autoUpdater = electron.autoUpdater;
+    const {dialog} = require('electron')
+    var alert = function (text) {
+        dialog.showMessageBox({type: 'info', message: text, buttons: ['Okay']}, function (buttonIndex) {
+        });
+    };
 
-var platform = os.platform() + '_' + os.arch();
-var version = app.getVersion();
+    var os = require('os');
+    var autoUpdater = electron.autoUpdater;
 
-autoUpdater.setFeedURL('http://league.paradigm-network.com:1337/update/'+platform+'/'+version);
-console.log('URL: ' + 'http://league.paradigm-network.com:1337/update/'+platform+'/'+version);
+    var platform = os.platform() + '_' + os.arch();
+    var version = app.getVersion();
 
-autoUpdater.on('checking-for-update', function() {
-    console.log("Checking for update");
-});
-autoUpdater.on('update-available', function() {
-    console.log("Update available");
-});
-autoUpdater.on('update-not-available', function() {
-    console.log("Update not available");
-});
-autoUpdater.on('error', function(err) {
-    console.log("Update error: " + err);
-});
+    var url = 'http://league.paradigm-network.com:1337/update/' + platform + '/' + version + '/stable';
 
-// event handling after download new release
-autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
-    console.log("Update downloaded");
-    // confirm install or not to user
-    var index = dialog.showMessageBox(mainWindow, {
-        type: 'info',
-        buttons: [i18n.__('Restart'), i18n.__('Later')],
-        title: "Typetalk",
-        message: i18n.__('The new version has been downloaded. Please restart the application to apply the updates.'),
-        detail: releaseName + "\n\n" + releaseNotes
+    autoUpdater.setFeedURL(url);
+
+    autoUpdater.on('checking-for-update', function () {
+    });
+    autoUpdater.on('update-available', function () {
+    });
+    autoUpdater.on('update-not-available', function () {
+    });
+    autoUpdater.on('error', function (err) {
     });
 
-    if (index === 1) {
-        return;
+// event handling after download new release
+    autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
+        //console.log("Update downloaded");
+        // confirm install or not to user
+        var index = dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            buttons: ['Restart', 'Later'],
+            title: "Update Available",
+            message: 'The new version has been downloaded. Please restart the application to apply the updates.',
+            detail: releaseName + "\n\n" + releaseNotes
+        });
+
+        if (index === 1) {
+            return;
+        }
+
+        // restart app, then update will be applied
+        quitAndUpdate();
+    });
+
+    autoUpdater.checkForUpdates();
+};
+
+
+
+
+
+
+function handleSquirrelEvent() {
+    if (process.argv.length === 1) {
+        return false;
     }
 
-    // restart app, then update will be applied
-    quitAndUpdate();
-});
+    const ChildProcess = require('child_process');
+    const path = require('path');
 
-autoUpdater.checkForUpdates();
+    const appFolder = path.resolve(process.execPath, '..');
+    const rootAtomFolder = path.resolve(appFolder, '..');
+    const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+    const exeName = path.basename(process.execPath);
+
+    const spawn = function(command, args) {
+        let spawnedProcess, error;
+
+        try {
+            spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
+        } catch (error) {}
+
+        return spawnedProcess;
+    };
+
+    const spawnUpdate = function(args) {
+        return spawn(updateDotExe, args);
+    };
+
+    const squirrelEvent = process.argv[1];
+    switch (squirrelEvent) {
+        case '--squirrel-install':
+        case '--squirrel-updated':
+            // Optionally do things such as:
+            // - Add your .exe to the PATH
+            // - Write to the registry for things like file associations and
+            //   explorer context menus
+
+            // Install desktop and start menu shortcuts
+
+
+            spawnUpdate(['--createShortcut', process.execPath]);
+
+            setTimeout(app.quit, 1000);
+            return true;
+
+        case '--squirrel-uninstall':
+            // Undo anything you did in the --squirrel-install and
+            // --squirrel-updated handlers
+
+            // Remove desktop and start menu shortcuts
+            spawnUpdate(['--removeShortcut', exeName]);
+
+            setTimeout(app.quit, 1000);
+            return true;
+
+        case '--squirrel-obsolete':
+            // This is called on the outgoing version of your app before
+            // we update to the new version - it's the opposite of
+            // --squirrel-updated
+
+            app.quit();
+            return true;
+    }
+};
