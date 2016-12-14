@@ -72,7 +72,7 @@ AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
     if (!fs.existsSync(garenaExecutable)) {
         hasGarenaExecutable = true;
     }
-    if (hasGarenaExecutable == false) {
+    if (hasGarenaExecutable) {
         leaguePath = garenaPath;
         leagueExecutable = garenaExecutable;
     }
