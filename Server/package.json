@@ -4,6 +4,7 @@
   "description": "UI Server for League Sandbox",
   "main": "ServerLogic.js",
   "dependencies": {
+    "get-port": "^2.1.0",
     "ws": "^1.1.1"
   },
   "devDependencies": {},
