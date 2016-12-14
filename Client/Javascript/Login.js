@@ -10,7 +10,7 @@ function Login(appLogic) {
         CreateElement({type: 'div', text: 'Nickname: ', class: 'Login_Label'}),
         this.nicknameInput = CreateElement({type: 'input', class: 'Login_NameInput'}),
         CreateElement({type: 'div', text: 'Host: ', class: 'Login_Label'}),
-        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput', text: 'league.paradigm-network.com'}),
+        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput', text: '104.168.222.21'}),
         CreateElement({type: 'div', text: 'Port: ', class: 'Login_Label'}),
         this.portInput = CreateElement({type: 'input', class: 'Login_PortInput', text: '7777'}),
         this.loginButton = CreateElement({type: 'button', text: 'Login', class: 'Login_Button'

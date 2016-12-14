@@ -57,7 +57,7 @@ AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
     console.log("Starting league with path: " + leaguePath);
     console.log("with executable: " + leagueExecutable);
 
-    console.log("Arguments: " +  "127.0.0.1 "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum);
+    console.log("Arguments: " +  this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum);
 
     const spawn = require('child_process').spawn;
 /*
@@ -66,6 +66,6 @@ Works but stops loading at 16%
 */
 //Works after clicking reconnect
 
-    const game = spawn('cmd', ['/c', 'start',"", leagueExecutable,"8394", "LoLLauncher.exe", "", "127.0.0.1 "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: leaguePath});
+    const game = spawn('cmd', ['/c', 'start',"", leagueExecutable,"8394", "LoLLauncher.exe", "", this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: leaguePath});
 
 };
