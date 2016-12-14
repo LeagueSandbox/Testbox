@@ -33,6 +33,10 @@ MainPage.prototype.updateOnlineList = function() {
     while (this.onlineBoxDiv.hasChildNodes()) {
         this.onlineBoxDiv.removeChild(this.onlineBoxDiv.lastChild);
     }
+    var d = CreateElement({type: 'div', class: 'MainPage_OnlinePlayerDiv', elements: [
+        CreateElement({type: 'div', class: 'MainPage_OnlinePlayerNameDiv', text: 'Online: ' + this.appLogic.networkManager.onlinePlayers.length})
+    ]});
+    this.onlineBoxDiv.appendChild(d);
     for (var i = 0; i < this.appLogic.networkManager.onlinePlayers.length; i++) {
         var player = this.appLogic.networkManager.onlinePlayers[i];
         var playerDiv = CreateElement({type: 'div', class: 'MainPage_OnlinePlayerDiv', elements: [
