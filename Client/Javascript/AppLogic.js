@@ -64,12 +64,12 @@ AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
     var hasNormalExecutable = false;
     var hasGarenaExecutable = false;
     var fs = require('fs');
-    if (!fs.existsSync(leagueExecutable)) {
+    if (fs.existsSync(leagueExecutable)) {
         hasNormalExecutable = true;
         //alert("Invalid League of Legends path");
         //return;
     }
-    if (!fs.existsSync(garenaExecutable)) {
+    if (fs.existsSync(garenaExecutable)) {
         hasGarenaExecutable = true;
     }
     if (hasGarenaExecutable) {
