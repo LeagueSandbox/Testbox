@@ -7,8 +7,6 @@ function ServerLogic() {
 	this.networkManager = new NetworkManager(this);
 	this.lobbyManager = new LobbyManager(this);
 
-	this.totalLaunchedGameServers = 0;
-
 	this.gameServers = [];
     this.gameServers.push({repository:"LeagueSandbox", branch: "Master"});
 	this.gameServers.push({repository:"MatthewFrench", branch: "Master"});
@@ -33,8 +31,6 @@ ServerLogic.prototype.updateAllGameServers = function() {
 ServerLogic.prototype.updateGameServer = function(repository, branch, gameJSON, needsCopied, messageCallback, callback) {
     const exec = require('child_process').spawn;
 
-    this.totalLaunchedGameServers++;
-
     //Create tempororary folder name
     var d = new Date();
     var fileName = d.getFullYear()+''+d.getMonth()+''+d.getDate()+''+d.getHours()+''+
@@ -43,7 +39,7 @@ ServerLogic.prototype.updateGameServer = function(repository, branch, gameJSON, 
     messageCallback("Generating game server with file name: " + fileName);
 
     //--gameServerRepository "https://github.com/LeagueSandbox/GameServer.git" --repositoryBranch "master" --commitMessageName "LastCommitMessage.txt" --gameServerSourceFileName "GameServer Source" --copyBuildToFolder "Compiled GameServer" --needsCopied false --pauseAtEnd true --configJSON ""
-    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--repositoryBranch', branch, '--commitMessageName', "LastCommitMessage-"+repository+"-"+branch+".txt", '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName, '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false'],
+    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--repositoryBranch', branch, '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName, '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false'],
         {cwd: '../Game-Server-Repositories'});
 
     gameUpdater.stdout.on('data', (data) => {
