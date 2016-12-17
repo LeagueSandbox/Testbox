@@ -25,10 +25,22 @@ function MainPage(appLogic) {
     this.chatBoxInput.placeholder = "Type text...";
     this.chatBoxInput.onkeydown = CreateFunction(this, this.chatInputKeyDown);
 
-    this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game is Starting'})
+    this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game is Starting', elements: [
+        this.startingGameDiv = CreateElement({type: 'div', class: 'MainPage_StartingGame'})
+    ]})
 }
 
+MainPage.prototype.addServerLog = function(text) {
+    var oldHeight = this.startingGameDiv.scrollHeight;
+    this.startingGameDiv.innerText += text;
+    window.requestAnimationFrame(CreateFunction(this, function() {
+        var newHeight = this.startingGameDiv.scrollHeight;
+        this.startingGameDiv.scrollTop += newHeight - oldHeight;
+    }));
+};
+
 MainPage.prototype.setBlockOverlayOn = function() {
+    this.startingGameDiv.innerText = "";
     this.mainDiv.appendChild(this.blockingOverlay);
 };
 MainPage.prototype.setBlockOverlayOff = function() {

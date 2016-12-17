@@ -67,6 +67,7 @@ LobbyPage.prototype.updateLobbyList = function(lobbies) {
         var lobby = this.addLobby(lobbies[i]['id'], lobbies[i]['name']);
         lobby.blueSide = lobbies[i]['blueSide'];
         lobby.redSide = lobbies[i]['redSide'];
+        lobby.gameServerRepository =  lobbies[i]['gameServerRepository'];
         lobby.updateDisplay();
     }
 };
@@ -90,12 +91,13 @@ LobbyPage.prototype.removeLobby = function(id) {
     lobby.getSidebarDiv().remove();
 };
 
-LobbyPage.prototype.updateLobby = function(id, name, blueSide, redSide) {
+LobbyPage.prototype.updateLobby = function(id, name, blueSide, redSide, gameServerRepository) {
     var lobby = this.getLobbyForID(id);
     if (lobby == null) return;
     lobby.name = name;
     lobby.blueSide = blueSide;
     lobby.redSide = redSide;
+    lobby.gameServerRepository = gameServerRepository;
     lobby.updateDisplay();
 };
 
@@ -130,12 +132,15 @@ function Lobby(lobbyPage) {
     this.name = "";
     this.blueSide = [];
     this.redSide = [];
+    this.gameServerRepository = 0;
     this.mainDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_MainDiv', elements: [
         this.titleDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_TitleDiv'}),
         this.blueSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_BlueSideDiv'}),
         this.redSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_RedSideDiv'}),
         this.startButton = CreateElement({type: 'button', class: 'LobbyPage_Lobby_StartButton',
-            text: 'Start Game', onClick: CreateFunction(this, function(){this.lobbyPage.startGame(this.id);})})
+            text: 'Start Game', onClick: CreateFunction(this, function(){this.lobbyPage.startGame(this.id);})}),
+        this.repositorySelect = CreateElement({type: 'select', class: 'LobbyPage_Lobby_RepositorySelect',
+            onInput: CreateFunction(this, this.repositorySelectChange)})
     ]});
 
     this.sideBarDisplayDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayDiv', elements:[
@@ -146,7 +151,18 @@ function Lobby(lobbyPage) {
     this.sideBarDisplayDiv.onclick = CreateFunction(this, function(){
         this.lobbyPage.lobbyClicked(this);
     });
+
+    for (var i = 0; i < lobbyPage.appLogic.gameServerRepositories.length; i++) {
+        var text = lobbyPage.appLogic.gameServerRepositories[i]['repository'] + '-' + lobbyPage.appLogic.gameServerRepositories[i]['branch'];
+        CreateElement({type: 'option', value: text, text: text, appendTo: this.repositorySelect});
+    }
+    this.repositorySelect.value = lobbyPage.appLogic.gameServerRepositories[0]['repository'] + lobbyPage.appLogic.gameServerRepositories[0]['branch'];
 }
+
+Lobby.prototype.repositorySelectChange = function() {
+    var selectedRepo = this.repositorySelect.selectedIndex;
+    this.lobbyPage.appLogic.networkManager.sendSwitchLobbyRepository(this.id, selectedRepo);
+};
 
 Lobby.prototype.hasPlayerWithID = function(playerID) {
     for (var i = 0; i < this.blueSide.length; i++) {
@@ -160,6 +176,8 @@ Lobby.prototype.hasPlayerWithID = function(playerID) {
 
 Lobby.prototype.updateDisplay = function() {
     this.titleDiv.innerText = "Lobby: " + this.name;
+
+    this.repositorySelect.selectedIndex = this.gameServerRepository;
 
     while (this.blueSideDiv.hasChildNodes()) {
         this.blueSideDiv.removeChild(this.blueSideDiv.lastChild);

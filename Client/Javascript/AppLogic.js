@@ -15,6 +15,8 @@ function AppLogic() {
     this.loginPage = new Login(this);
     this.mainPage = new MainPage(this);
 
+    this.gameServerRepositories = [];
+
     this.showLoginPage();
 }
 

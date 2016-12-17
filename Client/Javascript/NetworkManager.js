@@ -100,7 +100,7 @@ NetworkManager.prototype.connectToServer = function() {
             }break;
             //{message: "Lobby Updated", id: lobby.id, name: lobby.name, blueSide: [id], redSide: [id]}
             case "Lobby Updated" : {
-                this.appLogic.mainPage.lobbyPage.updateLobby(message['id'], message['name'], message['blueSide'], message['redSide']);
+                this.appLogic.mainPage.lobbyPage.updateLobby(message['id'], message['name'], message['blueSide'], message['redSide'], message['gameServerRepository']);
             }break;
             //{message: "Start Game", port: port, playerNum: playerNum}
             case "Start Game" : {
@@ -110,6 +110,13 @@ NetworkManager.prototype.connectToServer = function() {
             case "Waiting For Game Start" : {
                 this.appLogic.mainPage.setBlockOverlayOn();
             }break;
+            //{message: "Repository List", repositories: this.serverLogic.gameServers};
+            case "Repository List" : {
+                this.appLogic.gameServerRepositories = message['repositories'];
+            }break;
+            case "Server Starting Log" : {
+                this.appLogic.mainPage.addServerLog(message['text']);
+            }break;
         }
     });
 
@@ -118,7 +125,15 @@ NetworkManager.prototype.connectToServer = function() {
         // websocket is closed.
         this.appLogic.mainPage.getDiv().remove();
         this.appLogic.showLoginPage();
+        this.appLogic.mainPage.setBlockOverlayOff();
+        this.onlinePlayers = [];
+        this.selfID = -1;
+        this.selfLobbyID = -1;
     });
+};
+
+NetworkManager.prototype.sendSwitchLobbyRepository = function(lobbyID, repositoryID) {
+    this.send({message: "Set Lobby Repository", lobbyID: lobbyID, repositoryID: repositoryID});
 };
 
 NetworkManager.prototype.sendSwitchPlayerSide = function(playerID, lobbyID) {
