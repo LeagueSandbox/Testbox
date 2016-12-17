@@ -19,6 +19,7 @@ function NetworkManager(serverLogic) {
         var player = new Player(ws);
         player.id = this.currentPlayerID;
         this.currentPlayerID++;
+        this.sendToPlayer(player, this.getRepositoryList());
         this.sendToPlayer(player, this.getOnlineList());
         this.sendToPlayer(player, this.getLobbyListMessage());
         this.onlinePlayers.push(player);
@@ -63,6 +64,9 @@ function NetworkManager(serverLogic) {
                 case "Switch Player Side" : { //{message: "Switch Player Side", lobbyID: lobbyID, playerID: playerID}
 this.serverLogic.lobbyManager.switchPlayerSide(message['playerID'], message['lobbyID']);
                 }break;
+                case "Set Lobby Repository" : { //{message: "Set Lobby Repository", lobbyID: lobbyID, repositoryID: repositoryID}
+                    this.serverLogic.lobbyManager.setLobbyRepository(message['lobbyID'], message['repositoryID']);
+                }break;
             }
         }));
 
@@ -85,6 +89,10 @@ NetworkManager.prototype.getOnlineList = function() {
         playerList.push({id: player.id, name: player.nickname, selectedChampion: player.selectedChampion});
     }
     return {message: "Online List", players: playerList};
+};
+
+NetworkManager.prototype.getRepositoryList = function() {
+    return {message: "Repository List", repositories: this.serverLogic.gameServers};
 };
 
 NetworkManager.prototype.getStartGame = function(port, playerNum) {
@@ -128,7 +136,7 @@ NetworkManager.prototype.getLobbyListMessage = function() {
             var p = lobby.redSidePlayers[i];
             redSide.push(p.id);
         }
-        lobbies.push({id: lobby.id, name: lobby.name, blueSide: blueSide, redSide: redSide});
+        lobbies.push({id: lobby.id, name: lobby.name, blueSide: blueSide, redSide: redSide, gameServerRepository: lobby.gameServerRepository});
     }
     return {message: "Lobby List", lobbies: lobbies};
 };
@@ -152,7 +160,7 @@ NetworkManager.prototype.getLobbyUpdateMessage = function(lobby) {
         var p = lobby.redSidePlayers[i];
         redSide.push(p.id);
     }
-    return {message: "Lobby Updated", id: lobby.id, name: lobby.name, blueSide: blueSide, redSide: redSide};
+    return {message: "Lobby Updated", id: lobby.id, name: lobby.name, blueSide: blueSide, redSide: redSide, gameServerRepository: lobby.gameServerRepository};
 };
 
 NetworkManager.prototype.sendToAll = function(object) {

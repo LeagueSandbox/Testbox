@@ -7,6 +7,7 @@ function Lobby() {
     this.name = "";
     this.blueSidePlayers = [];
     this.redSidePlayers = [];
+    this.gameServerRepository = 0;
 }
 Lobby.prototype.removePlayer = function(player) {
     var i = this.blueSidePlayers.indexOf(player);

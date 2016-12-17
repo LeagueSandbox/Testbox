@@ -52,6 +52,14 @@ LobbyManager.prototype.switchPlayerSide = function (playerID, lobbyID) {
     }
     this.serverLogic.networkManager.sendToAll(this.serverLogic.networkManager.getLobbyUpdateMessage(lobby));
 };
+LobbyManager.prototype.setLobbyRepository = function(lobbyID, repositoryID) {
+    var lobby = this.getLobbyForID(lobbyID);
+    if (lobby == null) return;
+
+    lobby.gameServerRepository = repositoryID;
+
+    this.serverLogic.networkManager.sendToAll(this.serverLogic.networkManager.getLobbyUpdateMessage(lobby));
+};
 LobbyManager.prototype.enterLobby = function (player, lobbyID) {
     this.removePlayerFromLobby(player);
 
@@ -84,6 +92,10 @@ LobbyManager.prototype.startGame = function (lobbyID) {
     var lobby = this.getLobbyForID(lobbyID);
     var json = lobby.buildGameJSON();
 
+    var gs = this.serverLogic.gameServers[lobby.gameServerRepository];
+    var repository = gs['repository'];
+    var branch = gs['branch'];
+
     const getPort = require('get-port');
 
     getPort().then(CreateFunction(this, function (port) {
@@ -106,7 +118,7 @@ LobbyManager.prototype.startGame = function (lobbyID) {
         this.deleteLobby(lobby);
 
 
-        this.serverLogic.startGameServer(json, port, CreateFunction(this, function () {
+        this.serverLogic.startGameServer(repository, branch, json, port, CreateFunction(this, function () {
             for (var i = 0; i < players.length; i++) {
                 var player = players[i];
                 this.serverLogic.networkManager.sendToPlayer(player, this.serverLogic.networkManager.getStartGame(port, i + 1));
