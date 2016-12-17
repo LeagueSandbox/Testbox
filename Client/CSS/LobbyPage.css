@@ -76,6 +76,13 @@ position: absolute;
     line-height: 40px;
     font-size: 30px;
 }
+.LobbyPage_Lobby_RepositorySelect {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    height: 20px;
+    width: calc(50% - 100px - 10px);
+}
 .LobbyPage_Lobby_BlueSideDiv {
     position: absolute;
     left: 10%;

@@ -14,9 +14,23 @@
     left: 0px;
     background: rgba(0, 0, 0, 0.9);
     text-align: center;
-    line-height: 200px;
     font-size: 50px;
     color: white;
+}
+.MainPage_StartingGame {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    color: white;
+    font-size: 15px;
+    text-align: left;
+    height: calc(100% - 55px);
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    word-break: break-all;
+    overflow-x: hidden;
+    word-wrap: break-word;
 }
 .MainPage_ChatBoxDiv {
     position: absolute;
