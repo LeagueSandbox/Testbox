@@ -118,7 +118,15 @@ LobbyManager.prototype.startGame = function (lobbyID) {
         this.deleteLobby(lobby);
 
 
-        this.serverLogic.startGameServer(repository, branch, json, port, CreateFunction(this, function () {
+        this.serverLogic.startGameServer(repository, branch, json, port, CreateFunction(this, function(message){
+            //Message callback
+            for (var i = 0; i < players.length; i++) {
+                var player = players[i];
+                this.serverLogic.networkManager.addToServerMessageLog(player, message);
+            }
+
+        }), CreateFunction(this, function () {
+            //Start game callback
             for (var i = 0; i < players.length; i++) {
                 var player = players[i];
                 this.serverLogic.networkManager.sendToPlayer(player, this.serverLogic.networkManager.getStartGame(port, i + 1));

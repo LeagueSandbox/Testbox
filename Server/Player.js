@@ -1,3 +1,4 @@
+var Stopwatch = require('./Utility/Stopwatch');
 function Player(ws)
 {
     this.connection = ws;
@@ -5,6 +6,8 @@ function Player(ws)
     this.nickname = "";
     this.selectedChampion = "Ezreal";
     this.inLobby = -1;
+    this.serverGameLog = "";
+    this.serverGameLogStopwatch = new Stopwatch();
 }
 
 module.exports = Player;

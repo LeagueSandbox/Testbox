@@ -80,7 +80,23 @@ this.serverLogic.lobbyManager.switchPlayerSide(message['playerID'], message['lob
 
         //ws.send('something');
     }));
+
+    setTimeout(CreateFunction(this, this.processPlayerServerMessages), 1000.0/60.0);
 }
+
+NetworkManager.prototype.processPlayerServerMessages = function() {
+    for (var i = 0; i < this.onlinePlayers.length; i++) {
+        var player = this.onlinePlayers[i];
+        if (player.serverGameLog.length > 0) {
+            if (player.serverGameLogStopwatch.getMilliseconds() >= 1000.0 / 20.0) {
+                player.serverGameLogStopwatch.reset();
+                this.sendToPlayer(player, this.getServerMessage(player.serverGameLog));
+                player.serverGameLog = "";
+            }
+        }
+    }
+    setTimeout(CreateFunction(this, this.processPlayerServerMessages), 1000.0/60.0);
+};
 
 NetworkManager.prototype.getOnlineList = function() {
     var playerList = [];
@@ -147,6 +163,14 @@ NetworkManager.prototype.getLobbyCreateMessage = function(lobby) {
 
 NetworkManager.prototype.getLobbyDeleteMessage = function(lobby) {
     return {message: "Lobby Deleted", id: lobby.id};
+};
+
+NetworkManager.prototype.addToServerMessageLog = function(player, message) {
+    player.serverGameLog += message + "\n";
+};
+
+NetworkManager.prototype.getServerMessage = function(message) {
+    return {message: "Server Starting Log", text: message};
 };
 
 NetworkManager.prototype.getLobbyUpdateMessage = function(lobby) {
