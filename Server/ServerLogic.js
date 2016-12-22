@@ -17,17 +17,15 @@ function ServerLogic() {
 	var updateServerTimer;
 	updateServerTimer = CreateFunction(this, function() {
 	    this.lookupGameServers();
-        setTimeout(updateServerTimer, 1000 * 60 * 5);
+        setTimeout(updateServerTimer, 1000 * 60 * 1);
     });
     updateServerTimer();
 }
 
 ServerLogic.prototype.lookupGameServers = function() {
     const exec = require('child_process').spawn;
-    console.log("Looking up game servers");
     for (var i = 0; i < this.gameServerRepositories.length; i++) {
         let repository = this.gameServerRepositories[i];
-        console.log("Looking at game server: " + repository);
 
         let gameUpdater = exec('AutoCompilerForGameServer.exe',
             ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--onlyPrintBranches', 'true'],
@@ -41,7 +39,6 @@ ServerLogic.prototype.lookupGameServers = function() {
                 var text = dataArray[j];
                 text = text.trim();
                 if (text.length == 0) continue;
-                console.log("J: " + j + " Text: "+ text + ", length: " + text.length);
 
                 if (parsingBranches == false) {
                     if ((text.indexOf("Repository Branches:") !== -1)) {
@@ -63,7 +60,6 @@ ServerLogic.prototype.lookupGameServers = function() {
 };
 
 ServerLogic.prototype.addGameServer = function(repository, branch) {
-    console.log("Got branch: " + repository + "/" + branch);
     //Add to list if doesn't exist and update clients
     if (this.gameServerExists(repository, branch) == false) {
         this.gameServers.push({repository : repository, branch: branch});
