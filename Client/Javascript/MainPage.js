@@ -26,7 +26,9 @@ function MainPage(appLogic) {
     this.chatBoxInput.onkeydown = CreateFunction(this, this.chatInputKeyDown);
 
     this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game is Starting', elements: [
-        this.startingGameDiv = CreateElement({type: 'div', class: 'MainPage_StartingGame'})
+        this.startingGameDiv = CreateElement({type: 'div', class: 'MainPage_StartingGame'}),
+        this.exitGameButton = CreateElement({type: 'button', class: 'MainPage_StartingGame_ExitButton',
+        text: "Exit Starting Screen", onClick: CreateFunction(this, this.setBlockOverlayOff)})
     ]})
 }
 
