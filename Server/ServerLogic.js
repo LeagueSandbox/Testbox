@@ -69,9 +69,9 @@ ServerLogic.prototype.addGameServer = function(repository, branch) {
         this.gameServers.push({repository : repository, branch: branch});
         this.networkManager.sendToAll(this.networkManager.getRepositoryList());
 
-        this.updateGameServer(repository, branch, "", false, function(t){}, function(){
-            console.log("Success updating server!");
-        });
+        //this.updateGameServer(repository, branch, "", false, function(t){}, function(){
+        //    console.log("Success updating server!");
+        //});
     }
 };
 
