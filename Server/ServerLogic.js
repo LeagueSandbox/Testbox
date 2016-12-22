@@ -11,6 +11,8 @@ function ServerLogic() {
     this.gameServers.push({repository:"LeagueSandbox", branch: "Master"});
 	this.gameServers.push({repository:"MatthewFrench", branch: "Master"});
 
+	this.totalLaunchedGameServers = 0;
+
 	var updateServerTimer;
 	updateServerTimer = CreateFunction(this, function() {
         this.updateAllGameServers();
@@ -30,6 +32,8 @@ ServerLogic.prototype.updateAllGameServers = function() {
 
 ServerLogic.prototype.updateGameServer = function(repository, branch, gameJSON, needsCopied, messageCallback, callback) {
     const exec = require('child_process').spawn;
+
+    this.totalLaunchedGameServers++;
 
     //Create tempororary folder name
     var d = new Date();
