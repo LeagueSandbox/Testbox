@@ -4,21 +4,22 @@ var Utility = require('./Utility/Utility');
 var CreateFunction = Utility.CreateFunction;
 
 function ServerLogic() {
-	this.networkManager = new NetworkManager(this);
-	this.lobbyManager = new LobbyManager(this);
+    this.networkManager = new NetworkManager(this);
+    this.lobbyManager = new LobbyManager(this);
 
     this.gameServerRepositories = ["LeagueSandbox", "MatthewFrench"];
 
 	this.gameServers = [];
 
-	this.totalLaunchedGameServers = 0;
+    this.totalLaunchedGameServers = 0;
+    this.runningGames = [];
 
 	var updateServerTimer;
 	updateServerTimer = CreateFunction(this, function() {
 	    this.lookupGameServers();
         setTimeout(updateServerTimer, 1000 * 60 * 5);
     });
-	updateServerTimer();
+    updateServerTimer();
 }
 
 ServerLogic.prototype.lookupGameServers = function() {
@@ -70,26 +71,15 @@ ServerLogic.prototype.gameServerExists = function(repository, branch) {
     return false;
 };
 
-
-/*
-ServerLogic.prototype.updateAllGameServers = function() {
-    for (var i = 0; i < this.gameServers.length; i++) {
-        var gs = this.gameServers[i];
-        this.updateGameServer(gs['repository'], gs['branch'], "", false, function(t){}, function(){
-            console.log("Success updating server!");
-        });
-    }
-};*/
-
-ServerLogic.prototype.updateGameServer = function(repository, branch, gameJSON, needsCopied, messageCallback, callback) {
+ServerLogic.prototype.updateGameServer = function (repository, branch, gameJSON, needsCopied, messageCallback, callback) {
     const exec = require('child_process').spawn;
 
     this.totalLaunchedGameServers++;
-
+89-0
     //Create tempororary folder name
     var d = new Date();
-    var fileName = d.getFullYear()+''+d.getMonth()+''+d.getDate()+''+d.getHours()+''+
-        d.getMinutes()+''+d.getSeconds()+''+d.getMilliseconds()+'-'+Math.floor((Math.random() * 10000))+'-'+this.totalLaunchedGameServers;
+    var fileName = d.getFullYear() + '' + d.getMonth() + '' + d.getDate() + '' + d.getHours() + '' +
+        d.getMinutes() + '' + d.getSeconds() + '' + d.getMilliseconds() + '-' + Math.floor((Math.random() * 10000)) + '-' + this.totalLaunchedGameServers;
     console.log("Generating game server with file name: " + fileName);
     messageCallback("Generating game server with file name: " + fileName);
 
@@ -114,15 +104,15 @@ ServerLogic.prototype.updateGameServer = function(repository, branch, gameJSON, 
     });
 };
 
-ServerLogic.prototype.startGameServer = function(repository, branch, gameJSON, port, messageCallback, callback) {
+ServerLogic.prototype.startGameServer = function (repository, branch, gameJSON, port, messageCallback, callback) {
     this.updateGameServer(repository, branch, gameJSON, true, messageCallback, CreateFunction(this, function (serverName) {
         const exec = require('child_process').spawn;
 
-        console.log("Opening game: " + '../Game-Server-Repositories/'+serverName+'/GameServerApp.exe');
-        messageCallback("Opening game: " + '../Game-Server-Repositories/'+serverName+'/GameServerApp.exe');
+        console.log("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
+        messageCallback("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
 
         const game = exec('GameServerApp.exe', ['--port', port, '--config-json', JSON.stringify(gameJSON)],
-            {cwd: '../Game-Server-Repositories/'+serverName});
+            {cwd: '../Game-Server-Repositories/' + serverName});
 
         var waitingForBoot = true;
         game.stdout.on('data', (data) => {
@@ -157,5 +147,10 @@ ServerLogic.prototype.startGameServer = function(repository, branch, gameJSON, p
         });
     }));
 };
+
+function RunningGame() {
+    var id = -1;
+    var gameExec = null;
+}
 
 var serverInstance = new ServerLogic();
