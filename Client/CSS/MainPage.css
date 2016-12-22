@@ -119,3 +119,8 @@ float: left;
     width: calc(100% - 200px);
     height: calc(100% - 50px - 125px);
 }
+.MainPage_StartingGame_ExitButton {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}

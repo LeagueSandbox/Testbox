@@ -105,7 +105,7 @@ NetworkManager.prototype.connectToServer = function() {
             //{message: "Start Game", port: port, playerNum: playerNum}
             case "Start Game" : {
                 this.appLogic.launchLeagueOfLegends(message['port'], message['playerNum']);
-                this.appLogic.mainPage.setBlockOverlayOff();
+                //this.appLogic.mainPage.setBlockOverlayOff();
             }break;
             case "Waiting For Game Start" : {
                 this.appLogic.mainPage.setBlockOverlayOn();
