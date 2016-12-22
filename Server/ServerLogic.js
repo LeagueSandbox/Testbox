@@ -23,35 +23,47 @@ function ServerLogic() {
 }
 
 ServerLogic.prototype.lookupGameServers = function() {
-    for (var i = 0; i < this.gameServerRepositories; i++) {
-        var repository = this.gameServerRepositories[i];
+    const exec = require('child_process').spawn;
+    console.log("Looking up game servers");
+    for (var i = 0; i < this.gameServerRepositories.length; i++) {
+        let repository = this.gameServerRepositories[i];
+        console.log("Looking at game server: " + repository);
 
-        const gameUpdater = exec('AutoCompilerForGameServer.exe',
+        let gameUpdater = exec('AutoCompilerForGameServer.exe',
             ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--onlyPrintBranches', 'true'],
             {cwd: '../Game-Server-Repositories'});
 
         let parsingBranches = false;
 
         gameUpdater.stdout.on('data', CreateFunction(this, function(data) {
-            if (parsingBranches == false) {
-                if ((data.indexOf("Repository Branches:") !== -1)) {
-                    parsingBranches = true;
-                    return;
+            var dataArray = (""+data).split('\n');
+            for (var j = 0; j < dataArray.length; j++) {
+                var text = dataArray[j];
+                text = text.trim();
+                if (text.length == 0) continue;
+                console.log("J: " + j + " Text: "+ text + ", length: " + text.length);
+
+                if (parsingBranches == false) {
+                    if ((text.indexOf("Repository Branches:") !== -1)) {
+                        parsingBranches = true;
+                        return;
+                    }
                 }
-            }
-            if (parsingBranches) {
-                if ((data.indexOf("End Repository Branches") !== -1)) {
-                    parsingBranches = false;
-                    return;
+                if (parsingBranches) {
+                    if ((text.indexOf("End Repository Branches") !== -1)) {
+                        parsingBranches = false;
+                        return;
+                    }
+                    //Must be branch
+                    this.addGameServer(repository, text);
                 }
-                //Must be branch
-                this.addGameServer(repository, data);
             }
         }));
     }
 };
 
 ServerLogic.prototype.addGameServer = function(repository, branch) {
+    console.log("Got branch: " + repository + "/" + branch);
     //Add to list if doesn't exist and update clients
     if (this.gameServerExists(repository, branch) == false) {
         this.gameServers.push({repository : repository, branch: branch});
