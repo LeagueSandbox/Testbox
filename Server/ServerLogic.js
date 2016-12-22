@@ -7,20 +7,71 @@ function ServerLogic() {
 	this.networkManager = new NetworkManager(this);
 	this.lobbyManager = new LobbyManager(this);
 
+    this.gameServerRepositories = ["LeagueSandbox", "MatthewFrench"];
+
 	this.gameServers = [];
-    this.gameServers.push({repository:"LeagueSandbox", branch: "Master"});
-	this.gameServers.push({repository:"MatthewFrench", branch: "Master"});
 
 	this.totalLaunchedGameServers = 0;
 
 	var updateServerTimer;
 	updateServerTimer = CreateFunction(this, function() {
-        this.updateAllGameServers();
+	    this.lookupGameServers();
         setTimeout(updateServerTimer, 1000 * 60 * 5);
     });
 	updateServerTimer();
 }
 
+ServerLogic.prototype.lookupGameServers = function() {
+    for (var i = 0; i < this.gameServerRepositories; i++) {
+        var repository = this.gameServerRepositories[i];
+
+        const gameUpdater = exec('AutoCompilerForGameServer.exe',
+            ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--onlyPrintBranches', 'true'],
+            {cwd: '../Game-Server-Repositories'});
+
+        let parsingBranches = false;
+
+        gameUpdater.stdout.on('data', CreateFunction(this, function(data) {
+            if (parsingBranches == false) {
+                if ((data.indexOf("Repository Branches:") !== -1)) {
+                    parsingBranches = true;
+                    return;
+                }
+            }
+            if (parsingBranches) {
+                if ((data.indexOf("End Repository Branches") !== -1)) {
+                    parsingBranches = false;
+                    return;
+                }
+                //Must be branch
+                this.addGameServer(repository, data);
+            }
+        }));
+    }
+};
+
+ServerLogic.prototype.addGameServer = function(repository, branch) {
+    //Add to list if doesn't exist and update clients
+    if (this.gameServerExists(repository, branch) == false) {
+        this.gameServers.push({repository : repository, branch: branch});
+        this.networkManager.sendToAll(this.networkManager.getRepositoryList());
+
+        this.updateGameServer(repository, branch, "", false, function(t){}, function(){
+            console.log("Success updating server!");
+        });
+    }
+};
+
+ServerLogic.prototype.gameServerExists = function(repository, branch) {
+    for (var i = 0; i < this.gameServers.length; i++) {
+        var s = this.gameServers[i];
+        if (s['repository'] == repository && s['branch'] == branch) return true;
+    }
+    return false;
+};
+
+
+/*
 ServerLogic.prototype.updateAllGameServers = function() {
     for (var i = 0; i < this.gameServers.length; i++) {
         var gs = this.gameServers[i];
@@ -28,7 +79,7 @@ ServerLogic.prototype.updateAllGameServers = function() {
             console.log("Success updating server!");
         });
     }
-};
+};*/
 
 ServerLogic.prototype.updateGameServer = function(repository, branch, gameJSON, needsCopied, messageCallback, callback) {
     const exec = require('child_process').spawn;
@@ -43,7 +94,7 @@ ServerLogic.prototype.updateGameServer = function(repository, branch, gameJSON, 
     messageCallback("Generating game server with file name: " + fileName);
 
     //--gameServerRepository "https://github.com/LeagueSandbox/GameServer.git" --repositoryBranch "master" --commitMessageName "LastCommitMessage.txt" --gameServerSourceFileName "GameServer Source" --copyBuildToFolder "Compiled GameServer" --needsCopied false --pauseAtEnd true --configJSON ""
-    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--repositoryBranch', branch, '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName, '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false'],
+    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--repositoryBranch', branch, '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName, '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false', '--onlyPrintBranches', 'false'],
         {cwd: '../Game-Server-Repositories'});
 
     gameUpdater.stdout.on('data', (data) => {
