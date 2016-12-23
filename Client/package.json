@@ -12,9 +12,11 @@
   },
   "build": {
     "win" : {
-      "target" : "squirrel"
+      "target" : "squirrel",
+      "iconUrl" : "https://raw.githubusercontent.com/MatthewFrench/LeagueUI/master/Client/assets/sandbox-app-icon.ico?raw=true",
+       "icon": "assets/sandbox-app-icon"
     },
-      "icon": "assets/sandbox-app-icon",
+    "icon": "assets/sandbox-app-icon",
     "appId": "MatthewFrench.LeagueUI"
   },
   "scripts": {
