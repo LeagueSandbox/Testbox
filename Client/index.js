@@ -31,8 +31,28 @@ function createMainWindow() {
         minHeight: 600,
         frame: false,
         backgroundColor: 'black',
+        show: false,
+        titleBarStyle: 'hidden',
         icon:'assets/sandbox-app-icon.png'
     });
+
+    ipcMain.on('async', (event, arg) => {
+        // Print 1
+        console.log(arg);
+        // Reply on async message from renderer process
+        event.sender.send('async-reply', 2);
+    });
+
+    /*
+    win.webContents.invalidate();
+
+    win.webContents.on('dom-ready', ()=>{
+        win.show();
+    });*/
+/*
+    win.once('ready-to-show', ()=> {
+        setTimeout(function(){win.show();}, 1000);
+    });*/
 
     win.loadURL(`file://${__dirname}/index.html`);
     win.on('closed', onClosed);
