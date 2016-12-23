@@ -31,7 +31,7 @@ function MainPage(appLogic) {
     this.chatBoxInput.placeholder = "Type text...";
     this.chatBoxInput.onkeydown = CreateFunction(this, this.chatInputKeyDown);
 
-    this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game is Starting', elements: [
+    this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game Console', elements: [
         this.startingGameDiv = CreateElement({type: 'div', class: 'MainPage_StartingGame'}),
         this.exitGameButton = CreateElement({type: 'button', class: 'MainPage_StartingGame_ExitButton',
         text: "Exit Starting Screen", onClick: CreateFunction(this, this.setBlockOverlayOff)})
@@ -40,8 +40,8 @@ function MainPage(appLogic) {
 
 MainPage.prototype.addServerLog = function(text) {
     var oldHeight = this.startingGameDiv.scrollHeight;
-    this.startingGameDiv.innerText += text;
     window.requestAnimationFrame(CreateFunction(this, function() {
+        this.startingGameDiv.innerText += text;
         var newHeight = this.startingGameDiv.scrollHeight;
         this.startingGameDiv.scrollTop += newHeight - oldHeight;
     }));

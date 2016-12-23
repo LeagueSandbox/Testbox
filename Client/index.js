@@ -30,6 +30,7 @@ function createMainWindow() {
         minWidth: 800,
         minHeight: 600,
         frame: false,
+        backgroundColor: 'black',
         icon:'assets/sandbox-app-icon.png'
     });
 
