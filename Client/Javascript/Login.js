@@ -13,7 +13,7 @@ function Login(appLogic) {
         this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput input-text', text: '104.168.222.21'}),
         CreateElement({type: 'div', text: 'Port', class: 'Login_Label'}),
         this.portInput = CreateElement({type: 'input', class: 'Login_PortInput input-text', text: '7777'}),
-        this.loginButton = CreateElement({type: 'button', text: 'Login', class: 'Login_Button btn-large'
+        this.loginButton = CreateElement({type: 'button', text: 'Login', class: 'Login_Button waves-effect waves-light btn-large'
             , onClick: CreateFunction(this, this.loginButtonClicked)})
     ]});
     this.leaguePathInput.placeholder = 'C:\/League-of-Legends-4-20\/';

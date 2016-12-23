@@ -16,7 +16,12 @@ function LobbyPage(appLogic) {
         ]}),
         
         this.lobbyViewDiv = CreateElement({type: 'div', class: 'LobbyPage_LobbyViewDiv col s9', elements: [
-            this.noLobbyDiv = CreateElement({type: 'div', class: 'LobbyPage_NoLobbySelectedDiv', text: 'Please select or create a lobby.'})
+            this.noLobbyDiv = CreateElement({type: 'div', class: 'LobbyPage_NoLobbySelectedDiv valign-wrapper', elements: [
+                this.noLobbyDiv = CreateElement({type: 'h3', class: 'LobbyPage_NoLobbySelectedText valign center', text: 'Please select or create a lobby.', elements: [
+                    CreateElement({type: 'br'}),
+                    CreateElement({type: 'img', src: 'assets/poro_sad.png'}),
+                ]})
+            ]})
         ]})
     ]});
 

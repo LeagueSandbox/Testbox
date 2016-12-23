@@ -29,7 +29,8 @@ function createMainWindow() {
         height: 720,
         minWidth: 800,
         minHeight: 600,
-        frame: false
+        frame: false,
+        icon:'assets/sandbox-app-icon.png'
     });
 
     win.loadURL(`file://${__dirname}/index.html`);
