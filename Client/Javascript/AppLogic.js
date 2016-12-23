@@ -20,6 +20,15 @@ function AppLogic() {
     this.gameServerRepositories = [];
 
     this.showLoginPage();
+
+    //Delay to avoid flashing of the top bar
+    window.requestAnimationFrame(function(){
+        window.setTimeout(function(){
+            window.requestAnimationFrame(function(){
+                remote.getCurrentWindow().show();
+            });
+        }, 500);
+    });
 }
 
 AppLogic.prototype.createUI = function() {

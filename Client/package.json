@@ -1,7 +1,7 @@
 {
   "name": "LeagueUI",
   "productName": "LeagueUI",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "LeagueUI - A Public Multiplayer Testing Environment for League Sandbox",
   "license": "MIT",
   "repository": "MatthewFrench/LeagueUI",
@@ -11,10 +11,10 @@
     "url": ""
   },
   "build": {
-    "win" : {
-      "target" : "squirrel",
-      "iconUrl" : "https://raw.githubusercontent.com/MatthewFrench/LeagueUI/master/Client/assets/sandbox-app-icon.ico?raw=true",
-       "icon": "assets/sandbox-app-icon"
+    "win": {
+      "target": "squirrel",
+      "iconUrl": "https://raw.githubusercontent.com/MatthewFrench/LeagueUI/master/Client/assets/sandbox-app-icon.ico?raw=true",
+      "icon": "assets/sandbox-app-icon"
     },
     "icon": "assets/sandbox-app-icon",
     "appId": "MatthewFrench.LeagueUI"
@@ -34,11 +34,10 @@
     "electron-app",
     "electron"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "devtron": "^1.1.0",
-    "electron": "^1.4.12",
+    "electron": "^1.4.13",
     "electron-squirrel-startup": "^1.0.0",
     "xo": "^0.16.0"
   },
