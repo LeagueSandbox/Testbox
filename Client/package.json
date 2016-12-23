@@ -1,7 +1,7 @@
 {
   "name": "LeagueUI",
   "productName": "LeagueUI",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "LeagueUI - A Public Multiplayer Testing Environment for League Sandbox",
   "license": "MIT",
   "repository": "MatthewFrench/LeagueUI",
@@ -12,8 +12,11 @@
   },
   "build": {
     "win" : {
-      "target" : "squirrel"
+      "target" : "squirrel",
+      "iconUrl" : "https://raw.githubusercontent.com/MatthewFrench/LeagueUI/master/Client/assets/sandbox-app-icon.ico?raw=true",
+       "icon": "assets/sandbox-app-icon"
     },
+    "icon": "assets/sandbox-app-icon",
     "appId": "MatthewFrench.LeagueUI"
   },
   "scripts": {

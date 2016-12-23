@@ -1,6 +1,8 @@
 /**
  * Created by Matt on 12/12/2016.
  */
+const remote = require('electron').remote;
+
 let appLogic;
 window.onload = function() {
     appLogic = new AppLogic();
@@ -22,10 +24,37 @@ function AppLogic() {
 
 AppLogic.prototype.createUI = function() {
     this.mainDiv = CreateElement({type: 'div', class: 'AppLogic_MainDiv', elements: [
-        this.titleDiv = CreateElement({type:'div', class: 'AppLogic_TitleDiv', text: 'League UI (Fully Functional but Worst Looking)'}),
+        this.navbar = CreateElement({type:'nav', class: 'AppLogic_Navbar nav-wrapper', elements: [
+            this.titleDiv = CreateElement({type: 'div', class: 'brand-logo', text: 'League UI'}),
+            this.rightNav = CreateElement({type: 'div', class: 'right', elements: [
+                this.minimize = CreateElement({type: 'span', id: 'min-btn', class: 'fa fa-window-minimize AppLogic_Button'}),
+                this.maximize = CreateElement({type: 'span', id: 'max-btn', class: 'fa fa-window-maximize AppLogic_Button'}),
+                this.close = CreateElement({type: 'span', id: 'close-btn', class: 'fa fa-window-close AppLogic_Button'})
+            ]})
+        ]}),
+        this.goldBarDiv = CreateElement({type: 'div', class: 'AppLogic_GoldBar'}),
         this.viewDiv = CreateElement({type: 'div', class: 'AppLogic_ViewDiv'})
     ]});
     document.body.appendChild(this.mainDiv);
+
+    document.getElementById("min-btn").addEventListener("click", function (e) {
+       var window = remote.getCurrentWindow();
+       window.minimize(); 
+    });
+
+    document.getElementById("max-btn").addEventListener("click", function (e) {
+        var window = remote.getCurrentWindow();
+        if (!window.isMaximized()) {
+            window.maximize();          
+        } else {
+            window.unmaximize();
+        }
+    });
+
+    document.getElementById("close-btn").addEventListener("click", function (e) {
+        var window = remote.getCurrentWindow();
+        window.close();
+    }); 
 };
 
 AppLogic.prototype.connectedToServer = function() {
@@ -44,6 +73,14 @@ AppLogic.prototype.showLoginPage = function() {
 
 AppLogic.prototype.showMainPage = function() {
     this.viewDiv.appendChild(this.mainPage.getDiv());
+    var mainPage = this.mainPage;
+    //For materialize
+    $(document).ready(function() {
+        $('select').material_select();
+        $('#championSelect').on('change', function(e) {
+            mainPage.championSelectChange();
+        });
+    });
 };
 
 AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
