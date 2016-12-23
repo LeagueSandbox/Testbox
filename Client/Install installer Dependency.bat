@@ -1,5 +1,5 @@
 
-cd /d %~dp0;
+cd /d %~dp0
 
 npm install electron-builder --save-dev
 
