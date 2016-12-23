@@ -4,16 +4,16 @@
 
 function Login(appLogic) {
     this.appLogic = appLogic;
-    this.mainDiv = CreateElement({type: 'div', class: 'Login_MainDiv', elements: [
-        CreateElement({type: 'div', text: 'League Path: ', class: 'Login_Label'}),
-        this.leaguePathInput = CreateElement({type: 'input', class: 'Login_PathInput'}),
-        CreateElement({type: 'div', text: 'Nickname: ', class: 'Login_Label'}),
-        this.nicknameInput = CreateElement({type: 'input', class: 'Login_NameInput'}),
-        CreateElement({type: 'div', text: 'Host: ', class: 'Login_Label'}),
-        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput', text: '104.168.222.21'}),
-        CreateElement({type: 'div', text: 'Port: ', class: 'Login_Label'}),
-        this.portInput = CreateElement({type: 'input', class: 'Login_PortInput', text: '7777'}),
-        this.loginButton = CreateElement({type: 'button', text: 'Login', class: 'Login_Button'
+    this.mainDiv = CreateElement({type: 'div', class: 'Login_MainDiv container center-align', elements: [
+        CreateElement({type: 'div', text: 'League Path', class: 'Login_Label'}),
+        this.leaguePathInput = CreateElement({type: 'input', class: 'Login_PathInput input-text'}),
+        CreateElement({type: 'div', text: 'Nickname', class: 'Login_Label'}),
+        this.nicknameInput = CreateElement({type: 'input', class: 'Login_NameInput input-text'}),
+        CreateElement({type: 'div', text: 'Host', class: 'Login_Label'}),
+        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput input-text', text: '104.168.222.21'}),
+        CreateElement({type: 'div', text: 'Port', class: 'Login_Label'}),
+        this.portInput = CreateElement({type: 'input', class: 'Login_PortInput input-text', text: '7777'}),
+        this.loginButton = CreateElement({type: 'button', text: 'Login', class: 'Login_Button btn-large'
             , onClick: CreateFunction(this, this.loginButtonClicked)})
     ]});
     this.leaguePathInput.placeholder = 'C:\/League-of-Legends-4-20\/';

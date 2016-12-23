@@ -4,16 +4,18 @@
 
 function LobbyPage(appLogic) {
     this.appLogic = appLogic;
-    this.mainDiv = CreateElement({type: 'div', class: 'LobbyPage_MainDiv', elements: [
-        this.lobbyListDiv = CreateElement({type: 'div', class: 'LobbyPage_LobbyListDiv', elements: [
-            CreateElement({type: 'div', class: 'LobbyPage_LobbyListItem', text: 'Lobbies'})
+    this.mainDiv = CreateElement({type: 'div', class: 'LobbyPage_MainDiv row', elements: [
+        this.lobbyListDiv = CreateElement({type: 'div', class: 'LobbyPage_LobbyListDiv col s3', elements: [
+            CreateElement({type: 'div', class: 'LobbyPage_LobbyListItem', text: 'Lobbies'}),
+            CreateElement({type: 'div', class: 'LobbyPage_CreateLobbyButtonDiv', elements: [
+                CreateElement({type: 'button', text: 'Create', class: 'LobbyPage_CreateLobbyButton btn', onClick: CreateFunction(this, this.createLobbyButton)})
+            ]}),
+            this.createLobbyDiv = CreateElement({type: 'div', class: 'LobbyPage_ContainerLobbyCollection', elements: [
+                this.lobbyCollectionDiv = CreateElement({type: 'div', class: 'LobbyPage_LobbyCollectionDiv collection'})
+            ]}),
         ]}),
-        this.createLobbyDiv = CreateElement({type: 'div', class: 'LobbyPage_CreateLobbyDiv', elements: [
-            CreateElement({type: 'div', class: 'LobbyPage_CreateLobbyButton', elements: [
-                CreateElement({type: 'button', text: 'Create', onClick: CreateFunction(this, this.createLobbyButton)})
-            ]})
-        ]}),
-        this.lobbyViewDiv = CreateElement({type: 'div', class: 'LobbyPage_LobbyViewDiv', elements: [
+        
+        this.lobbyViewDiv = CreateElement({type: 'div', class: 'LobbyPage_LobbyViewDiv col s9', elements: [
             this.noLobbyDiv = CreateElement({type: 'div', class: 'LobbyPage_NoLobbySelectedDiv', text: 'Please select or create a lobby.'})
         ]})
     ]});
@@ -58,6 +60,10 @@ LobbyPage.prototype.updateSelfDisplay = function() {
         }
         this.lobbyViewDiv.appendChild(lobby.getDiv());
         lobby.setSidebarSelected(true);
+        $('#repositorySelect').material_select();
+        $('#repositorySelect').on('change', function(e) {
+            lobby.repositorySelectChange();
+        });
     }
 };
 
@@ -80,7 +86,7 @@ LobbyPage.prototype.addLobby = function(id, name) {
 
     lobby.updateDisplay();
 
-    this.lobbyListDiv.appendChild(lobby.getSidebarDiv());
+    this.lobbyCollectionDiv.appendChild(lobby.getSidebarDiv());
 
     return lobby;
 };
@@ -134,16 +140,32 @@ function Lobby(lobbyPage) {
     this.redSide = [];
     this.gameServerRepository = 0;
     this.mainDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_MainDiv', elements: [
-        this.titleDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_TitleDiv'}),
-        this.blueSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_BlueSideDiv'}),
-        this.redSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_RedSideDiv'}),
-        this.startButton = CreateElement({type: 'button', class: 'LobbyPage_Lobby_StartButton',
-            text: 'Start Game', onClick: CreateFunction(this, function(){this.lobbyPage.startGame(this.id);})}),
-        this.repositorySelect = CreateElement({type: 'select', class: 'LobbyPage_Lobby_RepositorySelect',
-            onInput: CreateFunction(this, this.repositorySelectChange)})
+        this.lobbyHeaderDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_HeaderDiv valign-wrapper', elements: [
+            this.titleDiv = CreateElement({type: 'h4', class: 'LobbyPage_Lobby_TitleDiv col s5 valign'}),
+            this.repositorySelectDiv = CreateElement({type: 'div', class: 'input-field col s4 valign', elements: [
+                this.repositorySelect = CreateElement({type: 'select', id: 'repositorySelect', class: 'LobbyPage_Lobby_RepositorySelect'}),
+                this.repositorySelectLabel = CreateElement({type: 'label', text: 'Choose the repository'}),
+            ]}),
+            this.startButton = CreateElement({type: 'button', class: 'LobbyPage_Lobby_StartButton btn col s3 valign',
+                text: 'Start Game', onClick: CreateFunction(this, function(){this.lobbyPage.startGame(this.id);})}),
+        ]}),
+        this.teamsDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_MainDiv', elements: [
+            this.blueSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_BlueSideDiv collection'}),
+            this.redSideDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_RedSideDiv collection'}),
+        ]}),
+        /*this.test11 = CreateElement({type: 'video', src: 'assets/11.mkv'}),
+        this.test10 = CreateElement({type: 'video', src: 'assets/10.mkv'}),
+        this.test12 = CreateElement({type: 'video', src: 'assets/12.mkv'})*/
     ]});
 
-    this.sideBarDisplayDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayDiv', elements:[
+    /*this.test11.setAttribute('autoplay', '');
+    this.test11.setAttribute('loop', '');
+    this.test10.setAttribute('autoplay', '');
+    this.test10.setAttribute('loop', '');
+    this.test12.setAttribute('autoplay', '');
+    this.test12.setAttribute('loop', '');*/
+
+    this.sideBarDisplayDiv = CreateElement({type: 'a', class: 'LobbyPage_Lobby_SidebarDisplayDiv collection-item', elements:[
         this.sideBarDisplayTitleDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayTitleDiv'}),
         this.sideBarDisplayPlayersDiv = CreateElement({type: 'div', class: 'LobbyPage_Lobby_SidebarDisplayPlayersDiv'})
     ]});
@@ -175,7 +197,7 @@ Lobby.prototype.hasPlayerWithID = function(playerID) {
 };
 
 Lobby.prototype.updateDisplay = function() {
-    this.titleDiv.innerText = "Lobby: " + this.name;
+    this.titleDiv.innerText = this.name;
 
     this.repositorySelect.selectedIndex = this.gameServerRepository;
 
@@ -194,11 +216,11 @@ Lobby.prototype.updateDisplay = function() {
         (function(i){
             var playerID = this.blueSide[i];
             var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
-            var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
-                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
-                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
-                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion}),
-                CreateElement({type: 'button', class: 'LobbyPage_Lobby_PlayerItemMoveRightDiv', text: '>', onClick: CreateFunction(this, function(){playerSwitchSides(playerID);})})
+            var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv collection-item avatar', elements: [
+                CreateElement({type: 'img', src: 'http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/' + player.selectedChampion + '.png', class: 'champion-frame'}),
+                CreateElement({type: 'span', class: 'title blue-grey-text truncate', text: player.nickname}),
+                CreateElement({type: 'p', class: 'LobbyPage_Lobby_PlayerItemIDDiv blue-grey-text text-lighten-4', text: player.id}),
+                CreateElement({type: 'button', class: 'LobbyPage_Lobby_PlayerItemMoveRightDiv btn-small secondary-content', text: '>', onClick: CreateFunction(this, function(){playerSwitchSides(playerID);})})
             ]});
             this.blueSideDiv.appendChild(div);
         }).call(this, i);
@@ -207,11 +229,11 @@ Lobby.prototype.updateDisplay = function() {
         (function(i){
             var playerID = this.redSide[i];
             var player = this.lobbyPage.appLogic.networkManager.getPlayerByID(playerID);
-            var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv', elements: [
-                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemNameDiv', text: player.nickname}),
-                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemIDDiv', text: player.id}),
-                CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemChampionDiv', text: player.selectedChampion}),
-                CreateElement({type: 'button', class: 'LobbyPage_Lobby_PlayerItemMoveLeftDiv', text: '<', onClick: CreateFunction(this, function(){playerSwitchSides(playerID);})})
+            var div = CreateElement({type: 'div', class: 'LobbyPage_Lobby_PlayerItemDiv collection-item avatar', elements: [
+                CreateElement({type: 'img', src: 'http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/' + player.selectedChampion + '.png', class: 'champion-frame'}),
+                CreateElement({type: 'span', class: 'title blue-grey-text truncate', text: player.nickname}),
+                CreateElement({type: 'p', class: 'LobbyPage_Lobby_PlayerItemIDDiv blue-grey-text text-lighten-4', text: player.id}),
+                CreateElement({type: 'button', class: 'LobbyPage_Lobby_PlayerItemMoveLeftDiv btn-small secondary-content', text: '<', onClick: CreateFunction(this, function(){playerSwitchSides(playerID);})})
             ]});
             this.redSideDiv.appendChild(div);
         }).call(this, i);
@@ -223,9 +245,9 @@ Lobby.prototype.updateDisplay = function() {
 
 Lobby.prototype.setSidebarSelected = function(selected) {
     if (selected) {
-        this.sideBarDisplayDiv.className = "LobbyPage_Lobby_SidebarDisplayDiv LobbyPage_Selected";
+        this.sideBarDisplayDiv.className = "LobbyPage_Lobby_SidebarDisplayDiv collection-item active";
     } else {
-        this.sideBarDisplayDiv.className = "LobbyPage_Lobby_SidebarDisplayDiv";
+        this.sideBarDisplayDiv.className = "LobbyPage_Lobby_SidebarDisplayDiv collection-item";
     }
 };
 

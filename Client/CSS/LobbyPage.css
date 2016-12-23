@@ -1,193 +1,60 @@
-.LobbyPage_MainDiv {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    top: 0px;
-    left: 0px;
-    margin: 0;
-}
-.LobbyPage_LobbyListDiv {
-    position: absolute;
-    width: 200px;
-    left: 0px;
-    top: 0px;
-    height: calc(100% - 30px);
-    box-sizing: border-box;
-    border: 1px solid white;
-}
-.LobbyPage_LobbyListItem {
-    width: 100%;
-    height: 30px;
-    line-height: 30px;
-    font-size: 25px;
-    text-align: center;
-    color: white;
-    box-sizing: border-box;
-    border: 1px solid white;
-}
-.LobbyPage_CreateLobbyDiv {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    height: 30px;
-    box-sizing: border-box;
-    border: 1px solid white;
-    width: 200px;
-    text-align: center;
-}
 .LobbyPage_CreateLobbyButton {
-    margin-top: 3px;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
-}
-.LobbyPage_LobbyViewDiv {
-    position: absolute;
-    left: 200px;
-    top: 0px;
-    width: calc(100% - 200px);
-    height: 100%;
-    box-sizing: border-box;
-}
-.LobbyPage_NoLobbySelectedDiv {
-    color: white;
     width: 100%;
-    text-align: center;
 }
 
+.LobbyPage_MainDiv {
+    height: calc(100% - 50px);
+    margin-top: 7px;
+}
 
+.LobbyPage_LobbyListDiv {
+    height: 100%; 
+}
+
+.LobbyPage_LobbyViewDiv {
+    height: 100%; 
+}
+
+.LobbyPage_ContainerLobbyCollection{
+    height: calc(100% - 85px);
+    margin-top: 7px;
+    white-space: pre-wrap;
+    overflow-y: scroll;
+    word-break: break-all;
+    overflow-x: hidden;
+    word-wrap: break-word; 
+}
 
 .LobbyPage_Lobby_MainDiv {
-position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    left: 0px;
+    height: calc(100% - 20px);
 }
-.LobbyPage_Lobby_TitleDiv {
-    position: absolute;
-    width: 100%;
-    height: 40px;
-    top: 0px;
-    left: 0px;
-    color: white;
-    text-align: center;
-    line-height: 40px;
-    font-size: 30px;
-}
-.LobbyPage_Lobby_RepositorySelect {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    height: 20px;
-    width: calc(50% - 100px - 10px);
-}
+
 .LobbyPage_Lobby_BlueSideDiv {
-    position: absolute;
-    left: 10%;
-    height: calc(100% - 30px - 10px - 40px);
-    top: 40px;
-    width: 35%;
-    box-sizing: border-box;
-    border: 1px solid blue;
+    width: 40%;
+    margin: 0 5%;
+    display: inline-block;
+    border: 1px solid #645127;
+    border-top-color: #c0ab71;
+    border-image: linear-gradient(to bottom,#c0ab71,#645127) 1 stretch;
+    border-width: 2px;
+    height: calc(100% - 42px);
+    background: #191814 url('../assets/teamblue.png');
+    background-size: cover;
+    background-position: left bottom;
+    background-repeat: no-repeat;
 }
+
 .LobbyPage_Lobby_RedSideDiv {
-    position: absolute;
-    right: 10%;
-    height: calc(100% - 30px - 10px - 40px);
-    top: 40px;
-    width: 35%;
-    box-sizing: border-box;
-    border: 1px solid red;
-}
-.LobbyPage_Lobby_StartButton {
-    position: absolute;
-    text-align: center;
-    bottom: 10px;
-    width: 100px;
-    left: calc(50% - 50px);
-}
-
-.LobbyPage_Selected {
-    background-color: #006600;
-}
-
-.LobbyPage_Lobby_SidebarDisplayDiv {
-    width: 100%;
-    height: 40px;
-    box-sizing: border-box;
-    border: solid 1px white;
-    position: relative;
-}
-.LobbyPage_Lobby_SidebarDisplayTitleDiv {
-    color: white;
-    width: 100%;
-    height: 20px;
-    text-align: center;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    line-height: 20px;
-}
-.LobbyPage_Lobby_SidebarDisplayPlayersDiv {
-    color: white;
-    width: 100%;
-    height: 20px;
-    text-align: center;
-    position: absolute;
-    left: 0px;
-    bottom: 0px;
-    line-height: 20px;
-}
-
-
-
-
-.LobbyPage_Lobby_PlayerItemDiv {
-    width: 100%;
-    height: 40px;
-    box-sizing: border-box;
-    border: solid 1px white;
-    position: relative;
-}
-.LobbyPage_Lobby_PlayerItemNameDiv {
-    color: white;
-    width: 100%;
-    height: 20px;
-    text-align: center;
-    position: absolute;
-    bottom: 0px;
-    line-height: 20px;
-    font-size: 20px;
-}
-.LobbyPage_Lobby_PlayerItemIDDiv {
-    color: white;
-    width: 100%;
-    height: 20px;
-    text-align: left;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    line-height: 20px;
-}
-.LobbyPage_Lobby_PlayerItemChampionDiv {
-    color: white;
-    width: 100%;
-    height: 20px;
-    text-align: right;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    line-height: 20px;
-}
-.LobbyPage_Lobby_PlayerItemMoveRightDiv {
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-}
-.LobbyPage_Lobby_PlayerItemMoveLeftDiv {
-    position: absolute;
-    left: 0px;
-    bottom: 0px;
+    width: 40%;
+    margin: 0 5%;
+    display: inline-block;
+    border: 1px solid #645127;
+    border-top-color: #c0ab71;
+    border-image: linear-gradient(to bottom,#c0ab71,#645127) 1 stretch;
+    border-width: 2px;
+    height: calc(100% - 42px);
+    background: #191814 url('../assets/teamred.png');
+    background-size: cover;
+    background-position: right bottom;
+    background-repeat: no-repeat;
 }

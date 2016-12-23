@@ -1,5 +1,6 @@
 
 const electron = require('electron');
+const protocol = electron.protocol;
 const app = electron.app;
 
 // this should be placed at top of main.js to handle setup events quickly
@@ -24,8 +25,11 @@ function initialize() {
 
 function createMainWindow() {
     const win = new electron.BrowserWindow({
-        width: 1024,
-        height: 768
+        width: 1280,
+        height: 720,
+        minWidth: 800,
+        minHeight: 600,
+        frame: false
     });
 
     win.loadURL(`file://${__dirname}/index.html`);
@@ -68,12 +72,20 @@ function createMainWindow() {
     return win;
 }
 
+
 app.on('activate', () => {
     initialize();
 });
 
 app.on('ready', () => {
     initialize();
+
+    protocol.registerFileProtocol('atom', (request, callback) => {
+        const url = request.url.substr(7)
+        callback({path: path.normalize(`${__dirname}/${url}`)})
+    }, (error) => {
+        if (error) console.error('Failed to register protocol')
+    })
 });
 
 app.on('window-all-closed', () => {
