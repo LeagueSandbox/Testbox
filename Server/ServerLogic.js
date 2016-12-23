@@ -7,7 +7,7 @@ function ServerLogic() {
     this.networkManager = new NetworkManager(this);
     this.lobbyManager = new LobbyManager(this);
 
-    this.gameServerRepositories = ["LeagueSandbox", "MatthewFrench"];
+    this.gameServerRepositories = ["LeagueSandbox"];
 
 	this.gameServers = [{repository: "LeagueSandbox", branch: "master"}];
 
