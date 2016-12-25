@@ -4,28 +4,34 @@
 
 function MainPage(appLogic) {
     this.appLogic = appLogic;
-    this.mainDiv = CreateElement({type: 'div', class: 'MainPage_MainDiv', elements: [
-        this.chatBoxDiv = CreateElement({type: 'div', class: 'MainPage_ChatBoxDiv'}),
-        this.chatBoxInput = CreateElement({type: 'input', class: 'MainPage_ChatBoxInput'}),
-        this.onlineBoxDiv = CreateElement({type: 'div', class: 'MainPage_OnlineBoxDiv'}),
-        this.championDiv = CreateElement({type: 'div', class: 'MainPage_ChampionDiv', elements:
+    this.mainDiv = CreateElement({type: 'div', class: 'MainPage_MainDiv row', elements: [
+        this.onlineBoxDiv = CreateElement({type: 'div', class: 'MainPage_OnlineBoxDiv col s3'}),
+        this.championDiv = CreateElement({type: 'div', class: 'MainPage_LobbyDiv col s9', elements:
         [
-            CreateElement({type: 'div', class: 'MainPage_ChampionDivLabel', text: 'Champion: '}),
-            this.championSelect = CreateElement({type: 'select', class: 'MainPage_ChampionSelect',
-                onInput: CreateFunction(this, this.championSelectChange)})
+            CreateElement({type: 'div', class: 'MainPage_LobbyContainer', elements: [
+                this.championDiv = CreateElement({type: 'div', class: 'MainPage_ChampionDiv input-field', elements:
+                [
+                    this.championSelect = CreateElement({type: 'select', id: 'championSelect', class: 'MainPage_ChampionSelect icons'}),
+                    this.championSelectLabel = CreateElement({type: 'label', text: 'Select your champion'}),
+                ]}),
+                (this.lobbyPage = new LobbyPage(this.appLogic)).getDiv()
+            ]}),
+            CreateElement({type: 'div', class: 'MainPage_ChatBox', elements: [  
+                this.chatBoxDiv = CreateElement({type: 'div', class: 'MainPage_ChatBoxDiv'}),
+                this.chatBoxInput = CreateElement({type: 'input', class: 'MainPage_ChatBoxInput'}),
+            ]}),
         ]}),
-        CreateElement({type: 'div', class: 'MainPage_LobbyContainer', elements: [
-            (this.lobbyPage = new LobbyPage(this.appLogic)).getDiv()
-        ]})
+        
     ]});
     for (var i = 0; i < ChampionList.length; i++) {
-        CreateElement({type: 'option', value: ChampionList[i], text: ChampionList[i], appendTo: this.championSelect});
+        var element = CreateElement({type: 'option', class: 'left circle', value: ChampionList[i], text: ChampionList[i], appendTo: this.championSelect});
+        element.setAttribute('data-icon', 'http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/' + ChampionList[i] + '.png');
     }
     this.championSelect.value = "Ezreal";
     this.chatBoxInput.placeholder = "Type text...";
     this.chatBoxInput.onkeydown = CreateFunction(this, this.chatInputKeyDown);
 
-    this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game is Starting', elements: [
+    this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game Console', elements: [
         this.startingGameDiv = CreateElement({type: 'div', class: 'MainPage_StartingGame'}),
         this.exitGameButton = CreateElement({type: 'button', class: 'MainPage_StartingGame_ExitButton',
         text: "Exit Starting Screen", onClick: CreateFunction(this, this.setBlockOverlayOff)})
@@ -34,8 +40,8 @@ function MainPage(appLogic) {
 
 MainPage.prototype.addServerLog = function(text) {
     var oldHeight = this.startingGameDiv.scrollHeight;
-    this.startingGameDiv.innerText += text;
     window.requestAnimationFrame(CreateFunction(this, function() {
+        this.startingGameDiv.innerText += text;
         var newHeight = this.startingGameDiv.scrollHeight;
         this.startingGameDiv.scrollTop += newHeight - oldHeight;
     }));
@@ -76,17 +82,18 @@ MainPage.prototype.updateOnlineList = function() {
     }
     this.onlineBoxDiv.appendChild(
         CreateElement({type: 'div', class: 'MainPage_OnlinePlayerDiv', elements: [
-            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerNameDiv', text: 'Players Online: ' + this.appLogic.networkManager.onlinePlayers.length})
+            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerNameDiv', text: 'Players Online: ' + this.appLogic.networkManager.onlinePlayers.length}),
+            this.onlinePlayersCollection = CreateElement({type: 'ul', class: 'collection'})
         ]})
     );
     for (var i = 0; i < this.appLogic.networkManager.onlinePlayers.length; i++) {
         var player = this.appLogic.networkManager.onlinePlayers[i];
-        var playerDiv = CreateElement({type: 'div', class: 'MainPage_OnlinePlayerDiv', elements: [
-            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerIDDiv', text: player.id}),
-            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerChampionDiv', text: player.selectedChampion}),
-            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerNameDiv', text: player.nickname})
+        var playerDiv = CreateElement({type: 'li', class: 'MainPage_OnlinePlayerDiv collection-item avatar', elements: [
+            CreateElement({type: 'img', src: 'http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/' + player.selectedChampion + '.png', class: 'champion-frame'}),
+            CreateElement({type: 'span', class: 'title blue-grey-text truncate', text: player.nickname}),
+            CreateElement({type: 'p', class: ' blue-grey-text text-lighten-4', text: player.id})
         ]});
-        this.onlineBoxDiv.appendChild(playerDiv);
+        this.onlinePlayersCollection.appendChild(playerDiv);
     }
 };
 
@@ -109,7 +116,7 @@ var ChampionList = [
     "Braum",
     "Caitlyn",
     "Cassiopeia",
-    "ChoGath",
+    "Chogath",
     "Corki",
     "Darius",
     "Diana",
@@ -118,13 +125,12 @@ var ChampionList = [
     "Elise",
     "Evelynn",
     "Ezreal",
-    "Fiddlesticks",
+    "FiddleSticks",
     "Fiora",
     "Fizz",
     "Galio",
     "Gangplank",
     "Garen",
-    "Global",
     "Gnar",
     "Gragas",
     "Graves",
@@ -145,7 +151,7 @@ var ChampionList = [
     "Kennen",
     "Khazix",
     "KogMaw",
-    "LeBlanc",
+    "Leblanc",
     "LeeSin",
     "Leona",
     "Lissandra",

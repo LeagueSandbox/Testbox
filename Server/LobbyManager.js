@@ -90,6 +90,7 @@ LobbyManager.prototype.removePlayerFromLobby = function (player) {
 
 LobbyManager.prototype.startGame = function (lobbyID) {
     var lobby = this.getLobbyForID(lobbyID);
+    if (lobby == null) return;
     var json = lobby.buildGameJSON();
 
     var gs = this.serverLogic.gameServers[lobby.gameServerRepository];

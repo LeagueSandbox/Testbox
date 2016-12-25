@@ -9,7 +9,7 @@ function ServerLogic() {
 
     this.gameServerRepositories = ["LeagueSandbox", "MatthewFrench"];
 
-	this.gameServers = [];
+	this.gameServers = [{repository: "LeagueSandbox", branch: "master"}];
 
     this.totalLaunchedGameServers = 0;
     this.runningGames = [];

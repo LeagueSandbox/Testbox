@@ -1,5 +1,6 @@
 
 const electron = require('electron');
+const protocol = electron.protocol;
 const app = electron.app;
 
 // this should be placed at top of main.js to handle setup events quickly
@@ -24,9 +25,34 @@ function initialize() {
 
 function createMainWindow() {
     const win = new electron.BrowserWindow({
-        width: 1024,
-        height: 768
+        width: 1280,
+        height: 720,
+        minWidth: 800,
+        minHeight: 600,
+        frame: false,
+        backgroundColor: 'black',
+        show: false,
+        titleBarStyle: 'hidden',
+        icon:'assets/sandbox-app-icon.png'
     });
+
+    ipcMain.on('async', (event, arg) => {
+        // Print 1
+        console.log(arg);
+        // Reply on async message from renderer process
+        event.sender.send('async-reply', 2);
+    });
+
+    /*
+    win.webContents.invalidate();
+
+    win.webContents.on('dom-ready', ()=>{
+        win.show();
+    });*/
+/*
+    win.once('ready-to-show', ()=> {
+        setTimeout(function(){win.show();}, 1000);
+    });*/
 
     win.loadURL(`file://${__dirname}/index.html`);
     win.on('closed', onClosed);
@@ -68,12 +94,20 @@ function createMainWindow() {
     return win;
 }
 
+
 app.on('activate', () => {
     initialize();
 });
 
 app.on('ready', () => {
     initialize();
+
+    protocol.registerFileProtocol('atom', (request, callback) => {
+        const url = request.url.substr(7)
+        callback({path: path.normalize(`${__dirname}/${url}`)})
+    }, (error) => {
+        if (error) console.error('Failed to register protocol')
+    })
 });
 
 app.on('window-all-closed', () => {
