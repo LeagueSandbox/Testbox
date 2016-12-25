@@ -148,6 +148,10 @@ NetworkManager.prototype.sendChampionSelectChange = function(champ) {
     this.send({message: "Champion Select", champion: champ});
 };
 
+NetworkManager.prototype.sendSkinSelectChange = function(skinID) {
+    this.send({message: "Skin Select", skinID: skinID});
+};
+
 NetworkManager.prototype.sendCreateLobby = function(name) {
     this.send({message: "Create Lobby", name: name});
 };

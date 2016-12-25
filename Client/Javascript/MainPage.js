@@ -4,15 +4,27 @@
 
 function MainPage(appLogic) {
     this.appLogic = appLogic;
+    this.selectedSkin = 0;
     this.mainDiv = CreateElement({type: 'div', class: 'MainPage_MainDiv row', elements: [
         this.onlineBoxDiv = CreateElement({type: 'div', class: 'MainPage_OnlineBoxDiv col s3'}),
         this.championDiv = CreateElement({type: 'div', class: 'MainPage_LobbyDiv col s9', elements:
         [
             CreateElement({type: 'div', class: 'MainPage_LobbyContainer', elements: [
-                this.championDiv = CreateElement({type: 'div', class: 'MainPage_ChampionDiv input-field', elements:
-                [
-                    this.championSelect = CreateElement({type: 'select', id: 'championSelect', class: 'MainPage_ChampionSelect icons'}),
-                    this.championSelectLabel = CreateElement({type: 'label', text: 'Select your champion'}),
+                this.championDiv = CreateElement({type: 'div', class: 'MainPage_ChampionDiv row', elements: [
+                    this.championSelectDiv = CreateElement({type: 'div', class: 'MainPage_ChampionSelectDiv col s10', elements:
+                    [
+                        this.championSelect = CreateElement({type: 'select', id: 'championSelect', class: 'MainPage_ChampionSelect icons'}),
+                    ]}),
+                    this.skinSelectDiv = CreateElement({type: 'button', id: 'selectSkin', class: 'MainPage_ButtonSelectSkin btn col s2', text: 'Select skin'}),
+                    this.modalSkin = CreateElement({type: 'div', id: 'modalSkin', class: 'modal modal-fixed-footer', elements: [
+                        this.modalSkinContent = CreateElement({type: 'div', class: 'modal-content', elements: [
+                            CreateElement({type: 'h4', class: 'center-align', text: 'Select your skin'}),
+                            this.carouselSkin = CreateElement({type: 'div', class: 'carousel'})
+                        ]}),
+                        this.modalSkinFooter = CreateElement({type: 'div', class: 'modal-footer center-align', elements: [
+                            CreateElement({type: 'button', class: 'modal-action modal-close waves-effect waves-green btn', text: 'Accept'})
+                        ]})
+                    ]})
                 ]}),
                 (this.lobbyPage = new LobbyPage(this.appLogic)).getDiv()
             ]}),
@@ -27,7 +39,9 @@ function MainPage(appLogic) {
         var element = CreateElement({type: 'option', class: 'left circle', value: ChampionList[i], text: ChampionList[i], appendTo: this.championSelect});
         element.setAttribute('data-icon', 'http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/' + ChampionList[i] + '.png');
     }
+    
     this.championSelect.value = "Ezreal";
+
     this.chatBoxInput.placeholder = "Type text...";
     this.chatBoxInput.onkeydown = CreateFunction(this, this.chatInputKeyDown);
 
@@ -57,7 +71,34 @@ MainPage.prototype.setBlockOverlayOff = function() {
 
 MainPage.prototype.championSelectChange = function() {
     var champion = this.championSelect.value;
+    this.selectedSkin = 0;
     this.appLogic.networkManager.sendChampionSelectChange(champion);
+    this.skinChange();
+    while (this.carouselSkin.hasChildNodes()) {
+        this.carouselSkin.removeChild(this.carouselSkin.lastChild);
+    }
+    for (var i = 0; i < ExtendedChampionsData[this.championSelect.value].skins.length; i++) {
+        var element = CreateElement({type: 'a', id: 'skin'+i, class: 'carousel-item skin' + (i == 0? ' MainPage_ActiveSkin': ''), elements: [
+        CreateElement({type: 'img', src: 'http://ddragon.leagueoflegends.com/cdn/img/champion/loading/'+this.championSelect.value+'_'+ExtendedChampionsData[this.championSelect.value].skins[i].num+'.jpg'}),
+            CreateElement({type: 'div', class: 'center-align', text: ExtendedChampionsData[this.championSelect.value].skins[i].name})
+        ], appendTo: this.carouselSkin});
+        element.setAttribute('skin', i);    
+        let mainPage = this; 
+        $("#skin"+i).click(function() {
+            $(".skin").removeClass('MainPage_ActiveSkin');
+            $("#skin" + $(this).attr('skin')).addClass('MainPage_ActiveSkin');
+            mainPage.selectedSkin = $(this).attr('skin');
+            mainPage.skinChange();
+        });
+    }
+    this.carouselSkin.setAttribute('class', 'carousel');
+    $('.carousel').carousel({dist: -30});
+    $('.carousel').carousel('set', 0);
+};
+
+MainPage.prototype.skinChange = function() {
+    console.log('Change skin to ' + this.selectedSkin);
+    this.appLogic.networkManager.sendSkinSelectChange(this.selectedSkin);
 };
 
 MainPage.prototype.chatInputKeyDown = function(e) {
@@ -95,131 +136,12 @@ MainPage.prototype.updateOnlineList = function() {
         ]});
         this.onlinePlayersCollection.appendChild(playerDiv);
     }
-};
+};  
 
 MainPage.prototype.getDiv = function() {
     return this.mainDiv;
 }
 
-var ChampionList = [
-    "Aatrox",
-    "Ahri",
-    "Akali",
-    "Alistar",
-    "Amumu",
-    "Anivia",
-    "Annie",
-    "Ashe",
-    "Azir",
-    "Blitzcrank",
-    "Brand",
-    "Braum",
-    "Caitlyn",
-    "Cassiopeia",
-    "Chogath",
-    "Corki",
-    "Darius",
-    "Diana",
-    "Draven",
-    "DrMundo",
-    "Elise",
-    "Evelynn",
-    "Ezreal",
-    "FiddleSticks",
-    "Fiora",
-    "Fizz",
-    "Galio",
-    "Gangplank",
-    "Garen",
-    "Gnar",
-    "Gragas",
-    "Graves",
-    "Hecarim",
-    "Heimerdinger",
-    "Irelia",
-    "Janna",
-    "JarvanIV",
-    "Jax",
-    "Jayce",
-    "Jinx",
-    "Kalista",
-    "Karma",
-    "Karthus",
-    "Kassadin",
-    "Katarina",
-    "Kayle",
-    "Kennen",
-    "Khazix",
-    "KogMaw",
-    "Leblanc",
-    "LeeSin",
-    "Leona",
-    "Lissandra",
-    "Lucian",
-    "Lulu",
-    "Lux",
-    "Malphite",
-    "Malzahar",
-    "Maokai",
-    "MasterYi",
-    "MissFortune",
-    "MonkeyKing",
-    "Mordekaiser",
-    "Morgana",
-    "Nami",
-    "Nasus",
-    "Nautilus",
-    "Nidalee",
-    "Nocturne",
-    "Nunu",
-    "Olaf",
-    "Orianna",
-    "Pantheon",
-    "Poppy",
-    "Quinn",
-    "Rammus",
-    "Renekton",
-    "Rengar",
-    "Riven",
-    "Rumble",
-    "Sejuani",
-    "Shaco",
-    "Shen",
-    "Shyvana",
-    "Singed",
-    "Sion",
-    "Sivir",
-    "Skarner",
-    "Sona",
-    "Soraka",
-    "Swain",
-    "Syndra",
-    "Talon",
-    "Taric",
-    "Teemo",
-    "Thresh",
-    "Tristana",
-    "Trundle",
-    "TwistedFate",
-    "Twitch",
-    "Udyr",
-    "Urgot",
-    "Varus",
-    "Vayne",
-    "Veigar",
-    "Velkoz",
-    "Vi",
-    "Viktor",
-    "Vladimir",
-    "Volibear",
-    "Warwick",
-    "Xerath",
-    "XinZhao",
-    "Yasuo",
-    "Yorick",
-    "Zac",
-    "Zed",
-    "Ziggs",
-    "Zilean",
-    "Zyra"
-]
+fs = require('fs');
+var ChampionList = JSON.parse(fs.readFileSync('./assets/ChampionList.json'));
+var ExtendedChampionsData = JSON.parse(fs.readFileSync('./assets/ExtendedChampionList.json'));
