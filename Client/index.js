@@ -89,7 +89,9 @@ function createMainWindow() {
         promptResponse = arg
     })
 
-    callOnReady();
+    if (process.platform === 'win32') {
+        callOnReady();
+    }
 
     return win;
 }

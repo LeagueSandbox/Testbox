@@ -32,7 +32,9 @@ function Login(appLogic) {
     }
 }
 Login.prototype.loginButtonClicked = function() {
-    if (this.leaguePathInput.value.length <= 0) {
+    var isMac = process.platform === 'darwin';
+
+    if (this.leaguePathInput.value.length <= 0 && !isMac) {
         alert("Type in League Path");
         return;
     }
@@ -72,7 +74,7 @@ Login.prototype.loginButtonClicked = function() {
     if (!fs.existsSync(garenaExecutable)) {
         hasGarenaExecutable = true;
     }
-    if (hasNormalExecutable == false && hasGarenaExecutable == false) {
+    if (hasNormalExecutable == false && hasGarenaExecutable == false && !isMac) {
         alert("Invalid League of Legends path");
         return;
     }
