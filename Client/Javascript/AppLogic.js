@@ -33,9 +33,19 @@ function AppLogic() {
 
 AppLogic.prototype.createUI = function() {
     this.mainDiv = CreateElement({type: 'div', class: 'AppLogic_MainDiv', elements: [
-        this.navbar = CreateElement({type:'nav', class: 'AppLogic_Navbar nav-wrapper', elements: [
-            this.titleDiv = CreateElement({type: 'div', class: 'brand-logo', text: 'League UI'}),
-            this.rightNav = CreateElement({type: 'div', class: 'right', elements: [
+        this.navbar = CreateElement({type:'nav', class: 'AppLogic_Navbar nav-wrapper row', elements: [
+            this.titleDiv = CreateElement({type: 'div', class: 'col s3 left-align', elements: [
+                CreateElement({type: 'span', class: 'brand-logo', text: 'League UI'})
+            ]}),
+            this.center = CreateElement({type: 'div', class: 'col s6 center-align', elements: [
+                this.tabNav = CreateElement({type: 'div', elements: [
+                    this.playButton = CreateElement({type: 'button', class: 'AppLogic_NavButtonSelected', text: 'Play'}),
+                    this.masteriesButton = CreateElement({type: 'button', class: 'AppLogic_NavButton', text: 'Masteries'}),
+                    this.runesButton = CreateElement({type: 'button', class: 'AppLogic_NavButton', text: 'Runes'}),
+                    this.settingsButton = CreateElement({type: 'button', class: 'AppLogic_NavButton', text: 'Settings'})
+                ]}),
+            ]}),
+            this.rightNav = CreateElement({type: 'div', class: 'col s3 right-align', elements: [
                 this.minimize = CreateElement({type: 'span', id: 'min-btn', class: 'fa fa-window-minimize AppLogic_Button'}),
                 this.maximize = CreateElement({type: 'span', id: 'max-btn', class: 'fa fa-window-maximize AppLogic_Button'}),
                 this.close = CreateElement({type: 'span', id: 'close-btn', class: 'fa fa-window-close AppLogic_Button'})
@@ -86,9 +96,16 @@ AppLogic.prototype.showMainPage = function() {
     //For materialize
     $(document).ready(function() {
         $('select').material_select();
+        $('.modal').modal();
+        $('#selectSkin').on('click', function(e) {
+            $('#modalSkin').modal('open');
+            $('.carousel').carousel({dist: -30});
+            $('.carousel').carousel('set', mainPage.selectedSkin);
+        });
         $('#championSelect').on('change', function(e) {
             mainPage.championSelectChange();
         });
+        mainPage.championSelectChange();
     });
 };
 

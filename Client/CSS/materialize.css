@@ -3009,18 +3009,6 @@ nav {
     nav .brand-logo.center {
       left: 50%;
       transform: translateX(-50%); }
-    @media only screen and (max-width: 992px) {
-      nav .brand-logo {
-        left: 50%;
-        transform: translateX(-50%); }
-        nav .brand-logo.left, nav .brand-logo.right {
-          padding: 0;
-          transform: none; }
-        nav .brand-logo.left {
-          left: 0.5rem; }
-        nav .brand-logo.right {
-          right: 0.5rem;
-          left: auto; } }
     nav .brand-logo.right {
       right: 0.5rem;
       padding: 0; }
@@ -3877,31 +3865,43 @@ button.btn-floating {
   position: fixed;
   left: 0;
   right: 0;
-  background-color: #fafafa;
+  background-color: #010a13;
   padding: 0;
   max-height: 70%;
   width: 55%;
   margin: auto;
   overflow-y: auto;
+  border: 1px solid #645127;
+  border-top-color: #c0ab71;
+  border-image: linear-gradient(to bottom, #c0ab71, #645127) 1 stretch;
+  border-width: 2px;
   border-radius: 2px;
   will-change: top, opacity; }
   @media only screen and (max-width: 992px) {
     .modal {
       width: 80%; } }
   .modal h1, .modal h2, .modal h3, .modal h4 {
-    margin-top: 0; }
+    margin-top: 0;
+    font-family: "Beaufort for LOL";
+    font-weight: 500;
+    font-style: normal;
+    color: #f0e6d2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    background: -webkit-repeating-linear-gradient(#e5cda0 0, #e5cda0 10px, #79622b 60px, #79622b 75px);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; }
   .modal .modal-content {
     padding: 24px; }
   .modal .modal-close {
     cursor: pointer; }
   .modal .modal-footer {
     border-radius: 0 0 2px 2px;
-    background-color: #fafafa;
+    background-color: #010a13;
     padding: 4px 6px;
     height: 56px;
     width: 100%; }
     .modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-flat {
-      float: right;
       margin: 6px 0; }
 
 .modal-overlay {

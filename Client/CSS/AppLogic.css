@@ -34,7 +34,7 @@ body {
     border-width: 3px;
     text-align: center;
     font-family: "Beaufort for LOL";
-    font-size: 15px;
+    font-size: 2vmin;
     padding: 0 25px;
     white-space: nowrap;
     line-height: 0px;
@@ -151,4 +151,73 @@ body {
 .AppLogic_ViewDiv {
     position: relative;
     height: calc(100% - 64px);
+}
+
+.AppLogic_NavButton {
+    -webkit-app-region: no-drag;
+    font-family: "Beaufort for LOL";
+    font-weight: bolder;
+    font-style: normal;
+    color: #cdbe91;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    background: -webkit-repeating-linear-gradient(#e5cda0 0,#e5cda0 10px,#79622b 60px,#79622b 75px);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+    display: inline-block;
+    margin: 0 0.5em 0 0.5em;
+    height: 64px;
+    transition: all .1s ease-out;
+    border: none;
+}
+
+.AppLogic_NavButtonSelected {
+    -webkit-app-region: no-drag;
+    font-family: "Beaufort for LOL";
+    font-weight: bolder;
+    font-style: normal;
+    color: #f0e6d2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    background: -webkit-repeating-linear-gradient(#e5cda0 0,#e5cda0 10px,#79622b 60px,#79622b 75px);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+    display: inline-block;
+    margin: 0 0.5em 0 0.5em;
+    text-align: center;
+    position: relative;
+    height: 64px;
+    border: none;
+}
+
+.AppLogic_NavButton:hover {
+    -webkit-app-region: no-drag;
+    font-family: "Beaufort for LOL";
+    font-weight: bolder;
+    font-style: normal;
+    color: #cdbe91;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    background: -webkit-repeating-linear-gradient(#e5cda0 0,#e5cda0 10px,#bd9d43 60px,#bd9d43 75px);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+    display: inline-block;
+    margin: 0 0.5em 0 0.5em;
+    height: 64px;
+	transition: all .1s ease-out;;
+}
+
+.AppLogic_NavButtonSelected:after {
+    content: " ";
+    position: absolute;
+    top: 43px;
+    left: 50%;
+    transform: translate(-50%);
+    background-position: 0 0;
+    width: 52px;
+    height: 14px;
+    background-image: url(https://lolstatic-a.akamaihd.net/frontpage/apps/prod/lcu_alpha_website/en_US/c0dcb26e1ba53437859331627d5e2f01dfda818e/assets/spritesheet/sprite.png);
 }
