@@ -93,45 +93,28 @@ AppLogic.prototype.showMainPage = function() {
 };
 
 AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
-    var leaguePath = this.appData.leaguePath;
-    if (leaguePath.substr(leaguePath.length - 1) != "\\") {
-        leaguePath = leaguePath + "\\";
-    }
-    var garenaPath = leaguePath;
-    leaguePath = leaguePath + "RADS/solutions/lol_game_client_sln/releases/0.0.1.68/deploy/";
-    var leagueExecutable = leaguePath + "League of Legends.exe";
-    var garenaExecutable = garenaPath + "League of Legends.exe";
-    leaguePath = leaguePath.replaceAll('\\', '/');
-    leagueExecutable = leagueExecutable.replaceAll('\\', '/');
+    this.appData.lastConnectPort = port;
+    this.appData.lastConnectPlayerNum = playerNum;
 
-    console.log("Starting league with path: " + leaguePath);
-    console.log("with executable: " + leagueExecutable);
+    console.log("Starting league with path: " + this.appData.getLeagueDirectory());
+    console.log("with executable: " + this.appData.getExecutablePath());
 
     console.log("Arguments: " +  this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum);
 
-    var hasNormalExecutable = false;
-    var hasGarenaExecutable = false;
-    var fs = require('fs');
-    if (fs.existsSync(leagueExecutable)) {
-        hasNormalExecutable = true;
-        //alert("Invalid League of Legends path");
-        //return;
-    }
-    if (fs.existsSync(garenaExecutable)) {
-        hasGarenaExecutable = true;
-    }
-    if (hasGarenaExecutable) {
-        leaguePath = garenaPath;
-        leagueExecutable = garenaExecutable;
-    }
-
     const spawn = require('child_process').spawn;
-/*
-Works but stops loading at 16%
-        const game = spawn(leagueExecutable, ["8394", "LoLLauncher.exe", "", "127.0.0.1 "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: leaguePath});
-*/
-//Works after clicking reconnect
+    var isMac = process.platform === 'darwin';
+    var isWindows = process.platform === 'win32';
+    if (isMac) {
+        /*
+         cd "/Users/matt/Desktop/Applications/League of Legends.app/Contents/LoL/RADS/projects/lol_game_client/releases/0.0.0.151/deploy/LeagueofLegends.app/Contents/MacOS/"
 
-    const game = spawn('cmd', ['/c', 'start',"", leagueExecutable,"8394", "LoLLauncher.exe", "", this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: leaguePath});
+         riot_launched=true ./Leagueoflegends 8394 LoLLauncher "" "127.0.0.1 5119 17BLOhi6KZsTtldTsizvHg== 1"
+         */
+        const game = spawn('', ['riot_launched=true', './Leagueoflegends',"8394", "LoLLauncher", "", this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: this.appData.getExecutableDirectory()});
 
+    }
+    if (isWindows) {
+        const game = spawn('cmd', ['/c', 'start',"", this.appData.getExecutablePath(),"8394", "LoLLauncher.exe", "", this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: this.appData.getLeagueDirectory()});
+
+    }
 };

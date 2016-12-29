@@ -7,9 +7,14 @@ function AppData() {
     this.port = "";
     this.nickname = "";
     this.leaguePath = "";
+    this.executablePath = "";
+    this.executableDirectory = "";
+    this.isGarena = false;
+    this.appData.lastConnectPort = -1;
+    this.appData.lastConnectPlayerNum = -1;
 }
 
-AppData.prototype.getExecutablePath = function() {
+AppData.prototype.isPathValid = function() {
     var isMac = process.platform === 'darwin';
     var isWindows = process.platform === 'win32';
 
@@ -20,17 +25,23 @@ AppData.prototype.getExecutablePath = function() {
         }
         var garenaPath = leaguePath;
         leaguePath = leaguePath + "RADS/solutions/lol_game_client_sln/releases/0.0.1.68/deploy/";
+        leaguePath = leaguePath.replaceAll('\\', '/');
+        garenaPath = garenaPath.replaceAll('\\', '/');
         var leagueExecutable = leaguePath + "League of Legends.exe";
         var garenaExecutable = garenaPath + "League of Legends.exe";
-        leagueExecutable = leagueExecutable.replaceAll('\\', '/');
-        garenaExecutable = leagueExecutable.replaceAll('\\', '/');
 
         var fs = require('fs');
         if (!fs.existsSync(leagueExecutable)) {
-            return leagueExecutable;
+            this.executablePath = leagueExecutable;
+            this.isGarena = false;
+            this.executableDirectory = leaguePath;
+            return true;
         }
         if (!fs.existsSync(garenaExecutable)) {
-            return garenaExecutable;
+            this.executablePath = garenaExecutable;
+            this.isGarena = true;
+            this.executableDirectory = garenaPath;
+            return true;
         }
     }
     if (isMac) {
@@ -39,20 +50,28 @@ AppData.prototype.getExecutablePath = function() {
             leaguePath = leaguePath + "\\";
         }
         leaguePath += "Contents/LoL/";
-        var garenaPath = leaguePath;
         leaguePath = leaguePath + "RADS/projects/lol_game_client/releases/0.0.0.151/deploy/LeagueofLegends.app/Contents/MacOS/";
-        var leagueExecutable = leaguePath + "League of Legends.exe";
-        var garenaExecutable = garenaPath + "League of Legends.exe";
-        leagueExecutable = leagueExecutable.replaceAll('\\', '/');
-        garenaExecutable = leagueExecutable.replaceAll('\\', '/');
+        leaguePath = leaguePath.replaceAll('\\', '/');
+        var leagueExecutable = leaguePath + "Leagueoflegends";
+
 
         var fs = require('fs');
         if (!fs.existsSync(leagueExecutable)) {
-            return leagueExecutable;
-        }
-        if (!fs.existsSync(garenaExecutable)) {
-            return garenaExecutable;
+            this.executablePath = leagueExecutable;
+            this.isGarena = false;
+            this.executableDirectory = leaguePath;
+            return true;
         }
     }
-    return null;
+    return false;
+};
+
+AppData.prototype.getLeagueDirectory = function() {
+    return this.leaguePath;
+};
+AppData.prototype.getExecutablePath = function() {
+    return this.executablePath;
+};
+AppData.prototype.getExecutableDirectory = function() {
+    return this.executableDirectory;
 };

@@ -66,7 +66,7 @@ Login.prototype.loginButtonClicked = function() {
         return;
     }
 
-    if (this.appLogic.appData.getExecutablePath() == null) {
+    if (this.appLogic.appData.isPathValid()) {
         alert("Invalid League of Legends path");
         return;
     }
