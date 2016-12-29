@@ -897,7 +897,6 @@ if (jQuery) {
             closeModal();
           });
 
-          $overlay.css({ display : "block", opacity : 0 });
 
           $modal.css({
             display : "block",
@@ -7459,7 +7458,7 @@ Picker.extend( 'pickadate', DatePicker )
 
           if (!options.full_width) {
             alignment = 'translateX(' + (view[0].clientWidth - item_width) / 2 + 'px) ';
-            alignment += 'translateY(' + (view[0].clientHeight - item_width) / 2 + 'px)';
+            alignment += 'translateY(0px)';
           } else {
             alignment = 'translateX(0)';
           }
