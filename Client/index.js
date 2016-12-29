@@ -93,6 +93,8 @@ function createMainWindow() {
         callOnReady();
     }
 
+    setTimeout(function(){win.show();}, 5000);
+
     return win;
 }
 

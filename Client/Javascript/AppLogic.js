@@ -105,13 +105,16 @@ AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
     var isMac = process.platform === 'darwin';
     var isWindows = process.platform === 'win32';
     if (isMac) {
-        /*
-         cd "/Users/matt/Desktop/Applications/League of Legends.app/Contents/LoL/RADS/projects/lol_game_client/releases/0.0.0.151/deploy/LeagueofLegends.app/Contents/MacOS/"
 
-         riot_launched=true ./Leagueoflegends 8394 LoLLauncher "" "127.0.0.1 5119 17BLOhi6KZsTtldTsizvHg== 1"
-         */
-        const game = spawn('', ['riot_launched=true', './Leagueoflegends',"8394", "LoLLauncher", "", this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: this.appData.getExecutableDirectory()});
+        var executeCommand = "riot_launched=true ./Leagueoflegends 8394 LoLLauncher \"\" \""+this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum+"\"";
 
+
+        console.log("Launched command: " + executeCommand);
+
+         var exec = require('child_process').exec;
+         exec(executeCommand, {
+             cwd: this.appData.getExecutableDirectory()
+         });
     }
     if (isWindows) {
         const game = spawn('cmd', ['/c', 'start',"", this.appData.getExecutablePath(),"8394", "LoLLauncher.exe", "", this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum], {cwd: this.appData.getLeagueDirectory()});

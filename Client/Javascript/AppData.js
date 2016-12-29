@@ -10,8 +10,8 @@ function AppData() {
     this.executablePath = "";
     this.executableDirectory = "";
     this.isGarena = false;
-    this.appData.lastConnectPort = -1;
-    this.appData.lastConnectPlayerNum = -1;
+    this.lastConnectPort = -1;
+    this.lastConnectPlayerNum = -1;
 }
 
 AppData.prototype.isPathValid = function() {
@@ -31,13 +31,13 @@ AppData.prototype.isPathValid = function() {
         var garenaExecutable = garenaPath + "League of Legends.exe";
 
         var fs = require('fs');
-        if (!fs.existsSync(leagueExecutable)) {
+        if (fs.existsSync(leagueExecutable)) {
             this.executablePath = leagueExecutable;
             this.isGarena = false;
             this.executableDirectory = leaguePath;
             return true;
         }
-        if (!fs.existsSync(garenaExecutable)) {
+        if (fs.existsSync(garenaExecutable)) {
             this.executablePath = garenaExecutable;
             this.isGarena = true;
             this.executableDirectory = garenaPath;
@@ -56,7 +56,7 @@ AppData.prototype.isPathValid = function() {
 
 
         var fs = require('fs');
-        if (!fs.existsSync(leagueExecutable)) {
+        if (fs.existsSync(leagueExecutable)) {
             this.executablePath = leagueExecutable;
             this.isGarena = false;
             this.executableDirectory = leaguePath;
