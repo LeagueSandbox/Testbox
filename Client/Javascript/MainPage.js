@@ -10,7 +10,7 @@ function MainPage(appLogic) {
             this.onlineBoxDiv = CreateElement({type: 'div', class: 'MainPage_OnlineBoxDiv'}),
             this.runningGamesBoxDiv = CreateElement({type: 'div', class: 'MainPage_RunningGamesBoxDiv'})
         ]}),
-        this.championDiv = CreateElement({type: 'div', class: 'MainPage_LobbyDiv col s9', elements:
+        this.championDiv = CreateElement({type: 'div', class: 'MainPage_LobbyDiv', elements:
         [
             CreateElement({type: 'div', class: 'MainPage_LobbyContainer', elements: [
                 this.championDiv = CreateElement({type: 'div', class: 'MainPage_ChampionDiv row', elements: [
@@ -51,7 +51,7 @@ function MainPage(appLogic) {
     this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game Console', elements: [
         this.startingGameDiv = CreateElement({type: 'div', class: 'MainPage_StartingGame'}),
         this.exitGameButton = CreateElement({type: 'button', class: 'MainPage_StartingGame_ExitButton',
-        text: "Exit Starting Screen", onClick: CreateFunction(this, this.setBlockOverlayOff)})
+        text: "Exit Console Screen", onClick: CreateFunction(this, this.setBlockOverlayOff)})
     ]});
 
     this.updateOnlineList();
@@ -156,6 +156,7 @@ MainPage.prototype.updateRunningGamesList = function() {
             this.runningGamesCollection = CreateElement({type: 'ul', class: 'collection'})
         ]})
     );
+    /*
     for (var i = 0; i < this.appLogic.networkManager.onlinePlayers.length; i++) {
         var player = this.appLogic.networkManager.onlinePlayers[i];
         var playerDiv = CreateElement({type: 'li', class: 'MainPage_OnlinePlayerDiv collection-item avatar', elements: [
@@ -164,8 +165,8 @@ MainPage.prototype.updateRunningGamesList = function() {
             CreateElement({type: 'p', class: ' blue-grey-text text-lighten-4', text: player.id})
         ]});
         this.runningGamesCollection.appendChild(playerDiv);
-    }
-};]
+    }*/
+};
 
 MainPage.prototype.getDiv = function() {
     return this.mainDiv;
