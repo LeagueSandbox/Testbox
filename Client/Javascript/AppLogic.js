@@ -122,9 +122,7 @@ AppLogic.prototype.launchLeagueOfLegends = function(port, playerNum) {
     var isMac = process.platform === 'darwin';
     var isWindows = process.platform === 'win32';
     if (isMac) {
-
         var executeCommand = "riot_launched=true ./Leagueoflegends 8394 LoLLauncher \"\" \""+this.appData.host+" "+port+" 17BLOhi6KZsTtldTsizvHg== "+playerNum+"\"";
-
 
         console.log("Launched command: " + executeCommand);
 
