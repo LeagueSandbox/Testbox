@@ -169,7 +169,7 @@ NetworkManager.prototype.getLobbyDeleteMessage = function(lobby) {
 };
 
 NetworkManager.prototype.addToServerMessageLog = function(player, message) {
-    player.serverGameLog = message;//+= message + "\n";
+    player.serverGameLog += message;// + "\n";//+= message + "\n";
 };
 
 NetworkManager.prototype.getServerMessage = function(message) {

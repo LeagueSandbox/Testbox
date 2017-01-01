@@ -45,8 +45,8 @@ Lobby.prototype.buildGameJSON = function() {
                 champion: player.selectedChampion,
                 team: "BLUE",
                 skin: player.selectedSkin,
-                summoner1: "HEAL",
-                summoner2: "FLASH",
+                summoner1: "SummonerHeal",
+                summoner2: "SummonerFlash",
                 ribbon: 2,
                 icon: 0,
                 runes: {
@@ -94,8 +94,8 @@ Lobby.prototype.buildGameJSON = function() {
                 champion: player.selectedChampion,
                 team: "RED",
                 skin: player.selectedSkin,
-                summoner1: "HEAL",
-                summoner2: "FLASH",
+                summoner1: "SummonerHeal",
+                summoner2: "SummonerFlash",
                 ribbon: 2,
                 icon: 0,
                 runes: {

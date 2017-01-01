@@ -6,8 +6,11 @@ function MainPage(appLogic) {
     this.appLogic = appLogic;
     this.selectedSkin = 0;
     this.mainDiv = CreateElement({type: 'div', class: 'MainPage_MainDiv row', elements: [
-        this.onlineBoxDiv = CreateElement({type: 'div', class: 'MainPage_OnlineBoxDiv col s3'}),
-        this.championDiv = CreateElement({type: 'div', class: 'MainPage_LobbyDiv col s9', elements:
+        CreateElement({type: 'div', class: 'MainPage_LeftSideContainer', elements: [
+            this.onlineBoxDiv = CreateElement({type: 'div', class: 'MainPage_OnlineBoxDiv'}),
+            this.runningGamesBoxDiv = CreateElement({type: 'div', class: 'MainPage_RunningGamesBoxDiv'})
+        ]}),
+        this.championDiv = CreateElement({type: 'div', class: 'MainPage_LobbyDiv', elements:
         [
             CreateElement({type: 'div', class: 'MainPage_LobbyContainer', elements: [
                 this.championDiv = CreateElement({type: 'div', class: 'MainPage_ChampionDiv row', elements: [
@@ -48,8 +51,11 @@ function MainPage(appLogic) {
     this.blockingOverlay = CreateElement({type: 'div', class: 'MainPage_BlockOverlay', text: 'Game Console', elements: [
         this.startingGameDiv = CreateElement({type: 'div', class: 'MainPage_StartingGame'}),
         this.exitGameButton = CreateElement({type: 'button', class: 'MainPage_StartingGame_ExitButton',
-        text: "Exit Starting Screen", onClick: CreateFunction(this, this.setBlockOverlayOff)})
-    ]})
+        text: "Exit Console Screen", onClick: CreateFunction(this, this.setBlockOverlayOff)})
+    ]});
+
+    this.updateOnlineList();
+    this.updateRunningGamesList();
 }
 
 MainPage.prototype.addServerLog = function(text) {
@@ -136,11 +142,35 @@ MainPage.prototype.updateOnlineList = function() {
         ]});
         this.onlinePlayersCollection.appendChild(playerDiv);
     }
-};  
+    
+    this.updateRunningGamesList();
+};
+
+MainPage.prototype.updateRunningGamesList = function() {
+    while (this.runningGamesBoxDiv.hasChildNodes()) {
+        this.runningGamesBoxDiv.removeChild(this.runningGamesBoxDiv.lastChild);
+    }
+    this.runningGamesBoxDiv.appendChild(
+        CreateElement({type: 'div', class: 'MainPage_OnlinePlayerDiv', elements: [
+            CreateElement({type: 'div', class: 'MainPage_OnlinePlayerNameDiv', text: 'Running Games: ' + 0}),
+            this.runningGamesCollection = CreateElement({type: 'ul', class: 'collection'})
+        ]})
+    );
+    /*
+    for (var i = 0; i < this.appLogic.networkManager.onlinePlayers.length; i++) {
+        var player = this.appLogic.networkManager.onlinePlayers[i];
+        var playerDiv = CreateElement({type: 'li', class: 'MainPage_OnlinePlayerDiv collection-item avatar', elements: [
+            CreateElement({type: 'img', src: 'http://ddragon.leagueoflegends.com/cdn/4.20.1/img/champion/' + player.selectedChampion + '.png', class: 'champion-frame'}),
+            CreateElement({type: 'span', class: 'title blue-grey-text truncate', text: player.nickname}),
+            CreateElement({type: 'p', class: ' blue-grey-text text-lighten-4', text: player.id})
+        ]});
+        this.runningGamesCollection.appendChild(playerDiv);
+    }*/
+};
 
 MainPage.prototype.getDiv = function() {
     return this.mainDiv;
-}
+};
 
 fs = require('fs');
 var ChampionList = JSON.parse(fs.readFileSync('./assets/ChampionList.json'));

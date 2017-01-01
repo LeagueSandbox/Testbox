@@ -89,7 +89,11 @@ function createMainWindow() {
         promptResponse = arg
     })
 
-    callOnReady();
+    if (process.platform === 'win32') {
+        callOnReady();
+    }
+
+    setTimeout(function(){win.show();}, 5000);
 
     return win;
 }
