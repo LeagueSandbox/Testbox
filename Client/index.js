@@ -20,6 +20,7 @@ let mainWindow;
 function initialize() {
     if (!mainWindow) {
         mainWindow = createMainWindow();
+        mainWindow.webContents.openDevTools()
     }
 }
 

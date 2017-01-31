@@ -173,5 +173,10 @@ MainPage.prototype.getDiv = function() {
 };
 
 fs = require('fs');
-var ChampionList = JSON.parse(fs.readFileSync('./assets/ChampionList.json'));
-var ExtendedChampionsData = JSON.parse(fs.readFileSync('./assets/ExtendedChampionList.json'));
+const path = require('path');
+var app = require('electron').remote.app;
+var basepath = app.getAppPath();
+console.log("Base path: " + basepath);
+console.log("Path: " + path.join(process.cwd(), '/assets') + '/ChampionList.json');
+var ChampionList = JSON.parse(fs.readFileSync(path.join(basepath, '/assets') + '/ChampionList.json', 'utf8'));
+var ExtendedChampionsData = JSON.parse(fs.readFileSync(path.join(basepath, '/assets') + '/ExtendedChampionList.json', 'utf8'));
