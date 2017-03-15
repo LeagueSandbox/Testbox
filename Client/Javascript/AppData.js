@@ -6,6 +6,7 @@ function AppData() {
     this.host = "";
     this.port = "";
     this.nickname = "";
+    this.password = "";
     this.leaguePath = "";
     this.executablePath = "";
     this.executableDirectory = "";

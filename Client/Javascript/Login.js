@@ -9,6 +9,8 @@ function Login(appLogic) {
         this.leaguePathInput = CreateElement({type: 'input', class: 'Login_PathInput input-text'}),
         CreateElement({type: 'div', text: 'Nickname', class: 'Login_Label'}),
         this.nicknameInput = CreateElement({type: 'input', class: 'Login_NameInput input-text'}),
+        CreateElement({type: 'div', text: 'Password', class: 'Password_Label'}),
+        this.passwordInput = CreateElement({type: 'input', class: 'Login_PasswordInput input-text'}),
         CreateElement({type: 'div', text: 'Host', class: 'Login_Label'}),
         this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput input-text', text: '104.168.222.21'}),
         CreateElement({type: 'div', text: 'Port', class: 'Login_Label'}),
@@ -37,17 +39,22 @@ function Login(appLogic) {
     if (localStorage.getItem("name") != undefined && localStorage.getItem("name") != "") {
         this.nicknameInput.value = localStorage.getItem("name");
     }
+    if (localStorage.getItem("password") != undefined && localStorage.getItem("password") != "") {
+        this.nicknameInput.value = localStorage.getItem("password");
+    }
 }
 Login.prototype.loginButtonClicked = function() {
 
     this.appLogic.appData.host = this.hostInput.value;
     this.appLogic.appData.leaguePath = this.leaguePathInput.value;
     this.appLogic.appData.nickname = this.nicknameInput.value;
+    this.appLogic.appData.password = this.passwordInput.value;
     this.appLogic.appData.port = this.portInput.value;
     localStorage.setItem("host", this.hostInput.value);
     localStorage.setItem("path", this.leaguePathInput.value);
     localStorage.setItem("name", this.nicknameInput.value);
     localStorage.setItem("port", this.portInput.value);
+    localStorage.setItem("password", this.passwordInput.value);
 
     if (this.leaguePathInput.value.length <= 0) {
         alert("Type in League Path");

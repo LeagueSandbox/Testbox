@@ -161,7 +161,7 @@ NetworkManager.prototype.sendEnterLobby = function(id) {
 };
 
 NetworkManager.prototype.sendNickname = function() {
-    this.send({message: "Nickname", name: this.appLogic.appData.nickname});
+    this.send({message: "Nickname", name: this.appLogic.appData.nickname, password: this.appLogic.appData.password});
 };
 
 NetworkManager.prototype.sendChat = function(chat) {

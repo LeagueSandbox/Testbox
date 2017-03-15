@@ -44,7 +44,11 @@ function NetworkManager(serverLogic) {
                 } break;
                 case "Nickname" : {
                     player.nickname = message['name'];
-                    this.sendToAll(this.getPlayerNicknameUpdate(player));
+                    if (message['password'].toLowerCase() != 'purple') {
+                        ws.close();
+                    } else {
+                        this.sendToAll(this.getPlayerNicknameUpdate(player));
+                    }
                 } break;
                 case "Enter Lobby" : { //{message: "Enter Lobby", id: id}
                     this.serverLogic.lobbyManager.enterLobby(player, message['id']);
