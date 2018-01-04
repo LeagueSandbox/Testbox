@@ -173,5 +173,5 @@ MainPage.prototype.getDiv = function() {
 };
 
 fs = require('fs');
-var ChampionList = JSON.parse(fs.readFileSync('./assets/ChampionList.json'));
-var ExtendedChampionsData = JSON.parse(fs.readFileSync('./assets/ExtendedChampionList.json'));
+var ChampionList = JSON.parse(fs.readFileSync('resources/app.asar/assets/ChampionList.json'));
+var ExtendedChampionsData = JSON.parse(fs.readFileSync('resources/app.asar/assets/ExtendedChampionList.json'));
