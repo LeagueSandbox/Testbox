@@ -135,6 +135,13 @@ NetworkManager.prototype.getPlayerOnlineMessage = function(player) {
 NetworkManager.prototype.getPlayerOfflineMessage = function(player) {
     return {message: "Player Offline", id: player.id};
 };
+NetworkManager.prototype.getPlayerByID = function (id) {
+    for (var i = 0; i < this.onlinePlayers.length; i++) {
+        var p = this.onlinePlayers[i];
+        if (p.id == id) return p;
+    }
+    return null;
+};
 
 NetworkManager.prototype.getSelfInLobbyMessage = function(player) {
     return {message: "Self Lobby", lobbyID: player.inLobby};
