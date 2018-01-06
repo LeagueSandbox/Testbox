@@ -70,6 +70,9 @@ this.serverLogic.lobbyManager.switchPlayerSide(message['playerID'], message['lob
                 case "Set Lobby Repository" : { //{message: "Set Lobby Repository", lobbyID: lobbyID, repositoryID: repositoryID}
                     this.serverLogic.lobbyManager.setLobbyRepository(message['lobbyID'], message['repositoryID']);
                 }break;
+                case "Leave Lobby": {
+                    this.serverLogic.lobbyManager.removePlayerFromLobby(player);
+                }break;
             }
         }));
 
