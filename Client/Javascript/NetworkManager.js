@@ -132,6 +132,10 @@ NetworkManager.prototype.connectToServer = function() {
     });
 };
 
+NetworkManager.prototype.sendLeaveLobby = function () {
+    this.send({ message: "Leave Lobby"});
+};
+
 NetworkManager.prototype.sendSwitchLobbyRepository = function(lobbyID, repositoryID) {
     this.send({message: "Set Lobby Repository", lobbyID: lobbyID, repositoryID: repositoryID});
 };
