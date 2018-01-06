@@ -102,6 +102,10 @@ LobbyPage.prototype.removeLobby = function(id) {
     lobby.getSidebarDiv().remove();
 };
 
+LobbyPage.prototype.leaveLobby = function () {
+    this.appLogic.networkManager.sendLeaveLobby();
+};
+
 LobbyPage.prototype.updateLobby = function(id, name, blueSide, redSide, gameServerRepository) {
     var lobby = this.getLobbyForID(id);
     if (lobby == null) return;
@@ -151,6 +155,10 @@ function Lobby(lobbyPage) {
                 this.repositorySelect = CreateElement({type: 'select', id: 'repositorySelect', class: 'LobbyPage_Lobby_RepositorySelect'}),
                 this.repositorySelectLabel = CreateElement({type: 'label', text: 'Choose the repository'}),
             ]}),
+            this.exitButton = CreateElement({
+                        type: 'button', class: 'LobbyPage_Lobby_StartButton btn col s3 valign',
+                        text: 'Leave Lobby', onClick: CreateFunction(this, function () { this.lobbyPage.leaveLobby(); })
+            }),
             this.startButton = CreateElement({type: 'button', class: 'LobbyPage_Lobby_StartButton btn col s3 valign',
                 text: 'Start Game', onClick: CreateFunction(this, function(){this.lobbyPage.startGame(this.id);})}),
         ]}),
