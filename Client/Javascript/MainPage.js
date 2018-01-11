@@ -17,6 +17,7 @@ function MainPage(appLogic) {
                     this.championSelectDiv = CreateElement({type: 'div', class: 'MainPage_ChampionSelectDiv col s10', elements:
                     [
                         this.championSelect = CreateElement({type: 'select', id: 'championSelect', class: 'MainPage_ChampionSelect icons'}),
+                        this.championSelectSound = CreateElement({type: 'audio'}),
                     ]}),
                     this.skinSelectDiv = CreateElement({type: 'button', id: 'selectSkin', class: 'MainPage_ButtonSelectSkin btn col s2', text: 'Select skin'}),
                     this.modalSkin = CreateElement({type: 'div', id: 'modalSkin', class: 'modal modal-fixed-footer', elements: [
@@ -80,6 +81,9 @@ MainPage.prototype.championSelectChange = function() {
     this.selectedSkin = 0;
     this.appLogic.networkManager.sendChampionSelectChange(champion);
     this.skinChange();
+    var soundSrc = 'assets/sounds/' + champion + '.mp3';
+    this.championSelectSound.src = soundSrc;
+    this.championSelectSound.play();
     while (this.carouselSkin.hasChildNodes()) {
         this.carouselSkin.removeChild(this.carouselSkin.lastChild);
     }
