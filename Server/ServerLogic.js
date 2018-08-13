@@ -1,5 +1,6 @@
 var NetworkManager = require('./NetworkManager');
 var LobbyManager = require('./LobbyManager');
+var rmdir = require('rimraf');
 var Utility = require('./Utility/Utility');
 var CreateFunction = Utility.CreateFunction;
 
@@ -83,7 +84,7 @@ ServerLogic.prototype.updateGameServer = function (repository, branch, gameJSON,
     const exec = require('child_process').spawn;
 
     this.totalLaunchedGameServers++;
-89-0
+
     //Create tempororary folder name
     var d = new Date();
     var fileName = d.getFullYear() + '' + d.getMonth() + '' + d.getDate() + '' + d.getHours() + '' +
@@ -119,40 +120,68 @@ ServerLogic.prototype.startGameServer = function (repository, branch, gameJSON, 
         console.log("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
         messageCallback("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
 
-        const game = exec('GameServerApp.exe', ['--port', port, '--config-json', JSON.stringify(gameJSON)],
-            {cwd: '../Game-Server-Repositories/' + serverName});
+        try {
+            const game = exec('GameServerApp.exe', ['--port', port, '--config-json', JSON.stringify(gameJSON)],
+                {cwd: '../Game-Server-Repositories/' + serverName});
 
-        var waitingForBoot = true;
-        game.stdout.on('data', (data) => {
-            messageCallback(`stdout: ${data}`);
+            var waitingForBoot = true;
+            game.stdout.on('data', (data) => {
+                messageCallback(`stdout: ${data}`);
 
-            console.log(`stdout: ${data}`);
-            if (waitingForBoot) {
-                if (data.indexOf("Game is ready.") !== -1) {
-                    console.log("Game is ready, doing callback");
-                    waitingForBoot = false;
-                    callback();
+                console.log(`stdout: ${data}`);
+                if (waitingForBoot) {
+                    if (data.indexOf("Game is ready.") !== -1) {
+                        console.log("Game is ready, doing callback");
+                        waitingForBoot = false;
+                        callback();
+                    }
                 }
+
+            });
+
+            game.stderr.on('data', (data) => {
+                messageCallback(`stdout: ${data}`);
+                console.log(`stdout: ${data}`);
+            });
+
+            game.on('close', (code) => {
+                messageCallback(`child process exited with code ${code}`);
+                console.log(`child process exited with code ${code}`);
+
+                try {
+                    rmdir('../Game-Server-Repositories/'+serverName, function(error){
+                        if (error == null) {
+                            console.log('Successfully deleted ' + '../Game-Server-Repositories/'+serverName);
+                        } else {
+                            console.log('Error deleting '+'../Game-Server-Repositories/'+serverName + ', ' + error);
+                        }
+                    });
+                } catch (e) {
+                    console.log('Could not delete folder: ' + serverName + ', ' + e);
+                }
+            });
+
+            setTimeout(() => {
+                try {
+                    game.kill();
+                } catch (e) {
+                    console.log('Could not kill process: ' + e);
+                }
+            }, 1000 * 60 * 60 * 2);
+        } catch (e) {
+            messageCallback(`Could not start server: ` + e);
+            try {
+                rmdir('../Game-Server-Repositories/'+serverName, function(error){
+                    if (error == null) {
+                        console.log('Successfully deleted ' + '../Game-Server-Repositories/'+serverName);
+                    } else {
+                        console.log('Error deleting '+'../Game-Server-Repositories/'+serverName + ', ' + error);
+                    }
+                });
+            } catch (e) {
+                console.log('Could not delete folder: ' + serverName + ', ' + e);
             }
-
-        });
-
-        game.stderr.on('data', (data) => {
-            messageCallback(`stdout: ${data}`);
-            console.log(`stdout: ${data}`);
-        });
-
-        game.on('close', (code) => {
-            messageCallback(`child process exited with code ${code}`);
-            console.log(`child process exited with code ${code}`);
-
-            //var rmdir = require('rimraf');
-            //rmdir('../Game-Server-Repositories/'+serverName, function(error){
-            //    console.log('Error deleting '+'../Game-Server-Repositories/'+serverName);
-            //});
-            //Delete old server
-            //rmdir example /s
-        });
+        }
     }));
 };
 
