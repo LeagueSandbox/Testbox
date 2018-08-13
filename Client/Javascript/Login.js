@@ -10,7 +10,7 @@ function Login(appLogic) {
         CreateElement({type: 'div', text: 'Nickname', class: 'Login_Label'}),
         this.nicknameInput = CreateElement({type: 'input', class: 'Login_NameInput input-text'}),
         CreateElement({type: 'div', text: 'Host', class: 'Login_Label'}),
-        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput input-text', text: '104.168.222.21'}),
+        this.hostInput = CreateElement({type: 'input', class: 'Login_HostInput input-text', text: '24.27.15.238'}),
         CreateElement({type: 'div', text: 'Port', class: 'Login_Label'}),
         this.portInput = CreateElement({type: 'input', class: 'Login_PortInput input-text', text: '7777'}),
         this.loginButton = CreateElement({type: 'button', text: 'Login', class: 'Login_Button waves-effect waves-light btn-large'
@@ -19,7 +19,7 @@ function Login(appLogic) {
     var isWindows = process.platform === 'win32';
     var isMac = process.platform === 'darwin';
     if (isWindows) {
-        this.leaguePathInput.placeholder = 'C:\/League-of-Legends-4-20\/';
+        this.leaguePathInput.placeholder = 'C:\/LeagueSandbox\/League_Sandbox_Client';
     }
     if (isMac) {
         this.leaguePathInput.placeholder = '\/League of Legends.app';
@@ -36,6 +36,9 @@ function Login(appLogic) {
     }
     if (localStorage.getItem("name") != undefined && localStorage.getItem("name") != "") {
         this.nicknameInput.value = localStorage.getItem("name");
+    }
+    if (this.leaguePathInput.value === '') {
+        this.leaguePathInput.value = 'C:\/LeagueSandbox\/League_Sandbox_Client';
     }
 }
 Login.prototype.loginButtonClicked = function() {
