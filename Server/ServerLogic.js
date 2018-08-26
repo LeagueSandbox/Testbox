@@ -169,11 +169,11 @@ ServerLogic.prototype.startGameServer = function (repository, branch, gameJSON, 
                 console.log(`stdout: ${data}`);
             });
 
-            gameUpdater.on('error', function(err) {
+            game.on('error', function(err) {
                 console.log('6Oh noez, teh errurz: ' + err);
             });
 
-            gameUpdater.stdout.on('error', function(err) {
+            game.stdout.on('error', function(err) {
                 console.log('7Oh noez, teh errurz: ' + err);
             });
 
