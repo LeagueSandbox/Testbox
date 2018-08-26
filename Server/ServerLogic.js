@@ -34,6 +34,18 @@ ServerLogic.prototype.lookupGameServers = function() {
 
         let parsingBranches = false;
 
+        gameUpdater.on('error', function(err) {
+            console.log('1Oh noez, teh errurz: ' + err);
+        });
+
+        gameUpdater.stdout.on('error', function(err) {
+            console.log('2Oh noez, teh errurz: ' + err);
+        });
+
+        gameUpdater.stderr.on('data', function(err) {
+            //Ignore error, it's just a waste to see
+        });
+
         gameUpdater.stdout.on('data', CreateFunction(this, function(data) {
             var dataArray = (""+data).split('\n');
             for (var j = 0; j < dataArray.length; j++) {
@@ -93,7 +105,9 @@ ServerLogic.prototype.updateGameServer = function (repository, branch, gameJSON,
     messageCallback("Generating game server with file name: " + fileName);
 
     //--gameServerRepository "https://github.com/LeagueSandbox/GameServer.git" --repositoryBranch "master" --commitMessageName "LastCommitMessage.txt" --gameServerSourceFileName "GameServer Source" --copyBuildToFolder "Compiled GameServer" --needsCopied false --pauseAtEnd true --configJSON ""
-    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--repositoryBranch', branch, '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName, '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false', '--onlyPrintBranches', 'false'],
+    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git",
+            '--repositoryBranch', branch, '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName,
+            '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false', '--onlyPrintBranches', 'false'],
         {cwd: '../Game-Server-Repositories'});
 
     gameUpdater.stdout.on('data', (data) => {
@@ -104,6 +118,18 @@ ServerLogic.prototype.updateGameServer = function (repository, branch, gameJSON,
     gameUpdater.stderr.on('data', (data) => {
         console.log(`stderr: ${data}`);
         messageCallback(`stderr: ${data}`);
+    });
+
+    gameUpdater.on('error', function(err) {
+        console.log('4Oh noez, teh errurz: ' + err);
+    });
+
+    gameUpdater.stdout.on('error', function(err) {
+        console.log('5Oh noez, teh errurz: ' + err);
+    });
+
+    gameUpdater.stderr.on('data', function(err) {
+        console.log('6Oh noez, teh errurz: ' + err);
     });
 
     gameUpdater.on('close', (code) => {
@@ -136,12 +162,19 @@ ServerLogic.prototype.startGameServer = function (repository, branch, gameJSON, 
                         callback();
                     }
                 }
-
             });
 
             game.stderr.on('data', (data) => {
                 messageCallback(`stdout: ${data}`);
                 console.log(`stdout: ${data}`);
+            });
+
+            gameUpdater.on('error', function(err) {
+                console.log('6Oh noez, teh errurz: ' + err);
+            });
+
+            gameUpdater.stdout.on('error', function(err) {
+                console.log('7Oh noez, teh errurz: ' + err);
             });
 
             game.on('close', (code) => {

@@ -20,7 +20,7 @@ Lobby.prototype.getNumberOfPlayers = function() {
     return this.blueSidePlayers.length + this.redSidePlayers.length;
 };
 
-Lobby.prototype.buildGameJSON = function() {
+Lobby.prototype.buildGameJSON = function(repository, branch) {
     var json = {
         players: [
 
@@ -33,7 +33,8 @@ Lobby.prototype.buildGameJSON = function() {
             MANACOSTS_ENABLED: false,
             COOLDOWNS_ENABLED: false,
             CHEATS_ENABLED: true,
-            MINION_SPAWNS_ENABLED: true
+            MINION_SPAWNS_ENABLED: true,
+            CONTENT_PATH: "../" + repository + "-" + branch + "/GameServerApp/Content"
         }
     };
     for (var i = 0; i < this.blueSidePlayers.length; i++) {
