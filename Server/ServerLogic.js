@@ -143,11 +143,11 @@ ServerLogic.prototype.startGameServer = function (repository, branch, gameJSON, 
     this.updateGameServer(repository, branch, gameJSON, true, messageCallback, CreateFunction(this, function (serverName) {
         const exec = require('child_process').spawn;
 
-        console.log("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
-        messageCallback("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
+        console.log("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerConsole.exe');
+        messageCallback("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerConsole.exe');
 
         try {
-            const game = exec('GameServerApp.exe', ['--port', port, '--config-json', JSON.stringify(gameJSON)],
+            const game = exec('GameServerConsole.exe', ['--port', port, '--config-json', JSON.stringify(gameJSON)],
                 {cwd: '../Game-Server-Repositories/' + serverName});
 
             var waitingForBoot = true;

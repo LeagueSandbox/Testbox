@@ -34,7 +34,7 @@ Lobby.prototype.buildGameJSON = function(repository, branch) {
             COOLDOWNS_ENABLED: false,
             CHEATS_ENABLED: true,
             MINION_SPAWNS_ENABLED: true,
-            CONTENT_PATH: "../" + repository + "-" + branch + "/GameServerApp/Content"
+            CONTENT_PATH: "../" + repository + "-" + branch + "/Content"
         }
     };
     for (var i = 0; i < this.blueSidePlayers.length; i++) {
