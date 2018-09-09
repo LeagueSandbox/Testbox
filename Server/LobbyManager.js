@@ -91,11 +91,11 @@ LobbyManager.prototype.removePlayerFromLobby = function (player) {
 LobbyManager.prototype.startGame = function (lobbyID) {
     var lobby = this.getLobbyForID(lobbyID);
     if (lobby == null) return;
-    var json = lobby.buildGameJSON();
 
     var gs = this.serverLogic.gameServers[lobby.gameServerRepository];
     var repository = gs['repository'];
     var branch = gs['branch'];
+    var json = lobby.buildGameJSON(repository, branch);
 
     const getPort = require('get-port');
 

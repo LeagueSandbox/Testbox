@@ -1,5 +1,6 @@
 var NetworkManager = require('./NetworkManager');
 var LobbyManager = require('./LobbyManager');
+var rmdir = require('rimraf');
 var Utility = require('./Utility/Utility');
 var CreateFunction = Utility.CreateFunction;
 
@@ -32,6 +33,18 @@ ServerLogic.prototype.lookupGameServers = function() {
             {cwd: '../Game-Server-Repositories'});
 
         let parsingBranches = false;
+
+        gameUpdater.on('error', function(err) {
+            console.log('1Oh noez, teh errurz: ' + err);
+        });
+
+        gameUpdater.stdout.on('error', function(err) {
+            console.log('2Oh noez, teh errurz: ' + err);
+        });
+
+        gameUpdater.stderr.on('data', function(err) {
+            //Ignore error, it's just a waste to see
+        });
 
         gameUpdater.stdout.on('data', CreateFunction(this, function(data) {
             var dataArray = (""+data).split('\n');
@@ -83,7 +96,7 @@ ServerLogic.prototype.updateGameServer = function (repository, branch, gameJSON,
     const exec = require('child_process').spawn;
 
     this.totalLaunchedGameServers++;
-89-0
+
     //Create tempororary folder name
     var d = new Date();
     var fileName = d.getFullYear() + '' + d.getMonth() + '' + d.getDate() + '' + d.getHours() + '' +
@@ -92,7 +105,9 @@ ServerLogic.prototype.updateGameServer = function (repository, branch, gameJSON,
     messageCallback("Generating game server with file name: " + fileName);
 
     //--gameServerRepository "https://github.com/LeagueSandbox/GameServer.git" --repositoryBranch "master" --commitMessageName "LastCommitMessage.txt" --gameServerSourceFileName "GameServer Source" --copyBuildToFolder "Compiled GameServer" --needsCopied false --pauseAtEnd true --configJSON ""
-    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git", '--repositoryBranch', branch, '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName, '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false', '--onlyPrintBranches', 'false'],
+    const gameUpdater = exec('AutoCompilerForGameServer.exe', ['--gameServerRepository', "https://github.com/"+repository+"/GameServer.git",
+            '--repositoryBranch', branch, '--gameServerSourceFileName', repository+"-"+branch, '--copyBuildToFolder', fileName,
+            '--needsCopied', ''+needsCopied, '--pauseAtEnd', 'false', '--needsConfig', 'false', '--onlyPrintBranches', 'false'],
         {cwd: '../Game-Server-Repositories'});
 
     gameUpdater.stdout.on('data', (data) => {
@@ -103,6 +118,18 @@ ServerLogic.prototype.updateGameServer = function (repository, branch, gameJSON,
     gameUpdater.stderr.on('data', (data) => {
         console.log(`stderr: ${data}`);
         messageCallback(`stderr: ${data}`);
+    });
+
+    gameUpdater.on('error', function(err) {
+        console.log('4Oh noez, teh errurz: ' + err);
+    });
+
+    gameUpdater.stdout.on('error', function(err) {
+        console.log('5Oh noez, teh errurz: ' + err);
+    });
+
+    gameUpdater.stderr.on('data', function(err) {
+        console.log('6Oh noez, teh errurz: ' + err);
     });
 
     gameUpdater.on('close', (code) => {
@@ -116,43 +143,78 @@ ServerLogic.prototype.startGameServer = function (repository, branch, gameJSON, 
     this.updateGameServer(repository, branch, gameJSON, true, messageCallback, CreateFunction(this, function (serverName) {
         const exec = require('child_process').spawn;
 
-        console.log("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
-        messageCallback("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerApp.exe');
+        console.log("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerConsole.exe');
+        messageCallback("Opening game: " + '../Game-Server-Repositories/' + serverName + '/GameServerConsole.exe');
 
-        const game = exec('GameServerApp.exe', ['--port', port, '--config-json', JSON.stringify(gameJSON)],
-            {cwd: '../Game-Server-Repositories/' + serverName});
+        try {
+            const game = exec('GameServerConsole.exe', ['--port', port, '--config-json', JSON.stringify(gameJSON)],
+                {cwd: '../Game-Server-Repositories/' + serverName});
 
-        var waitingForBoot = true;
-        game.stdout.on('data', (data) => {
-            messageCallback(`stdout: ${data}`);
+            var waitingForBoot = true;
+            game.stdout.on('data', (data) => {
+                messageCallback(`stdout: ${data}`);
 
-            console.log(`stdout: ${data}`);
-            if (waitingForBoot) {
-                if (data.indexOf("Game is ready.") !== -1) {
-                    console.log("Game is ready, doing callback");
-                    waitingForBoot = false;
-                    callback();
+                console.log(`stdout: ${data}`);
+                if (waitingForBoot) {
+                    if (data.indexOf("Game is ready.") !== -1) {
+                        console.log("Game is ready, doing callback");
+                        waitingForBoot = false;
+                        callback();
+                    }
                 }
+            });
+
+            game.stderr.on('data', (data) => {
+                messageCallback(`stdout: ${data}`);
+                console.log(`stdout: ${data}`);
+            });
+
+            game.on('error', function(err) {
+                console.log('6Oh noez, teh errurz: ' + err);
+            });
+
+            game.stdout.on('error', function(err) {
+                console.log('7Oh noez, teh errurz: ' + err);
+            });
+
+            game.on('close', (code) => {
+                messageCallback(`child process exited with code ${code}`);
+                console.log(`child process exited with code ${code}`);
+
+                try {
+                    rmdir('../Game-Server-Repositories/'+serverName, function(error){
+                        if (error == null) {
+                            console.log('Successfully deleted ' + '../Game-Server-Repositories/'+serverName);
+                        } else {
+                            console.log('Error deleting '+'../Game-Server-Repositories/'+serverName + ', ' + error);
+                        }
+                    });
+                } catch (e) {
+                    console.log('Could not delete folder: ' + serverName + ', ' + e);
+                }
+            });
+
+            setTimeout(() => {
+                try {
+                    game.kill();
+                } catch (e) {
+                    console.log('Could not kill process: ' + e);
+                }
+            }, 1000 * 60 * 60 * 2);
+        } catch (e) {
+            messageCallback(`Could not start server: ` + e);
+            try {
+                rmdir('../Game-Server-Repositories/'+serverName, function(error){
+                    if (error == null) {
+                        console.log('Successfully deleted ' + '../Game-Server-Repositories/'+serverName);
+                    } else {
+                        console.log('Error deleting '+'../Game-Server-Repositories/'+serverName + ', ' + error);
+                    }
+                });
+            } catch (e) {
+                console.log('Could not delete folder: ' + serverName + ', ' + e);
             }
-
-        });
-
-        game.stderr.on('data', (data) => {
-            messageCallback(`stdout: ${data}`);
-            console.log(`stdout: ${data}`);
-        });
-
-        game.on('close', (code) => {
-            messageCallback(`child process exited with code ${code}`);
-            console.log(`child process exited with code ${code}`);
-
-            //var rmdir = require('rimraf');
-            //rmdir('../Game-Server-Repositories/'+serverName, function(error){
-            //    console.log('Error deleting '+'../Game-Server-Repositories/'+serverName);
-            //});
-            //Delete old server
-            //rmdir example /s
-        });
+        }
     }));
 };
 
